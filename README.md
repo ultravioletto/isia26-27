@@ -24,7 +24,7 @@ code/      il codice Arduino per M5Stack CoreS3
 | File | Contenuto |
 | --- | --- |
 | [PROGETTO.md](project/PROGETTO.md) | La specifica completa: architettura, modello della creatura (bisogni, stati, transizioni, stato proprio), sensi, espressione, rete, unisono, specie, design system, strumenti, rischi, parametri di partenza e formato dei pacchetti. |
-| [creature-in-rete-progetto.pdf](project/creature-in-rete-progetto.pdf) | Lo stesso documento impaginato, con i dodici schemi. Non riporta ancora lo stato proprio (§4.4). |
+| [creature-in-rete-progetto.pdf](project/creature-in-rete-progetto.pdf) | Lo stesso documento impaginato, con i dodici schemi in appendice C. Gli schemi sono della bozza dell'11 ottobre 2026: la macchina a stati (figura 4) non mostra ancora lo stato proprio. |
 
 ### docs
 
