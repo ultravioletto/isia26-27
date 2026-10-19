@@ -31,10 +31,10 @@ Si lavora in gruppo e, dalla terza lezione, sul dispositivo vero. Ogni gruppo pr
 
 In 12 lezioni ogni gruppo progetta una **specie** di Creature in rete e la fa vivere su due dispositivi. All'ultima lezione la flotta intera abita la stessa stanza e suona insieme nell'unisono.
 
-Il corso segue il documento di progetto: si parte dal corpo e dai sensi, si passa all'espressione senza volto, poi alla vita sociale via radio e infine all'unisono. Ogni lezione dura 7 ore:
+Il corso segue il documento di progetto: si parte dal corpo e dai sensi, si passa all'espressione senza volto, poi alla vita sociale via radio e infine all'unisono. Ogni lezione dura 7 ore, pausa pranzo compresa, cioè 6 ore di lezione: 72 ore in tutto il corso.
 
 - **2 ore frontali**: le tecniche e le specifiche del progetto che servono quel giorno.
-- **5 ore di lavoro di gruppo**: si progetta, si scrive e si prova sui dispositivi, con revisione ai tavoli.
+- **5 ore di lavoro di gruppo**, compresa un'ora di pranzo: si progetta, si scrive e si prova sui dispositivi, con revisione ai tavoli.
 
 La piattaforma (bisogni, stati, sensi, rete, unisono, strumenti) è data e non si modifica. Gli studenti progettano il **carattere**: lavorano in due file, `config.h` e `creatura.h`, più l'involucro fisico.
 

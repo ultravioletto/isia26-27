@@ -2,7 +2,7 @@
 
 Interaction Design 2026–27 · Creature in rete · piano di lezione · bozza 19 ottobre 2026 · Bruno
 
-Dalla misura all'evento, i nove gesti comuni e il contesto. **2 ore frontali + 5 ore di gruppo** con i dispositivi: è la lezione in cui ogni gruppo riceve i suoi due CoreS3.
+Dalla misura all'evento, i nove gesti comuni e il contesto. **2 ore frontali + 5 ore di gruppo**, pranzo compreso, con i dispositivi: è la lezione in cui ogni gruppo riceve i suoi due CoreS3.
 
 ## Obiettivi
 
@@ -119,15 +119,15 @@ Quello che abbiamo già scoperto provando i dispositivi, da dire prima che i gru
 
 ---
 
-## Lavoro di gruppo · 5 ore · misurare la stanza
+## Lavoro di gruppo · 5 ore con il pranzo · misurare la stanza
 
 | Ora | Blocco | Durata |
 | --- | --- | --- |
 | 0:00 | A · Accendere, caricare, registrare | 45' |
-| 0:45 | B · Le quattro postazioni di misura | 90' |
-| 2:15 | pausa | 15' |
-| 2:30 | C · Dalle misure alle soglie | 60' |
-| 3:30 | D · Il corpo della creatura | 45' |
+| 0:45 | B · Le quattro postazioni di misura | 75' |
+| 2:00 | pranzo | 60' |
+| 3:00 | C · Dalle misure alle soglie | 45' |
+| 3:45 | D · Il corpo della creatura | 30' |
 | 4:15 | E · Tabella di classe e soglie di flotta | 45' |
 
 ### A · Accendere, caricare, registrare (45')
@@ -137,9 +137,9 @@ Quello che abbiamo già scoperto provando i dispositivi, da dire prima che i gru
 3. Dalla pagina **Info**, copiare nel registro il **MAC** di ogni dispositivo e scegliere un nome breve. Servono per la tabella di flotta (§3.5): il MAC dà l'identità e il seme individuale di ogni creatura.
 4. Controllare la batteria dalla pagina Alimentazione.
 
-### B · Le quattro postazioni di misura (90')
+### B · Le quattro postazioni di misura (75')
 
-I gruppi ruotano su quattro postazioni, circa 20 minuti ciascuna. In ogni postazione: una persona fa il gesto, una legge la pagina, una scrive. Ogni situazione si ripete **5 volte**, possibilmente da persone diverse, e si annotano il minimo, il valore tipico e il massimo.
+I gruppi ruotano su quattro postazioni, circa 18 minuti ciascuna. In ogni postazione: una persona fa il gesto, una legge la pagina, una scrive. Ogni situazione si ripete **5 volte**, possibilmente da persone diverse, e si annotano il minimo, il valore tipico e il massimo.
 
 **1. Scossa e inclinazione** (pagina Accelerometro: picco scossa in g, beccheggio e rollio in gradi)
 - scossa leggera, scossa decisa, scossa forte;
@@ -162,7 +162,7 @@ I gruppi ruotano su quattro postazioni, circa 20 minuti ciascuna. In ogni postaz
 - carezza lenta e trascinamento veloce: lunghezza e durata;
 - toccare lo schermo con il dispositivo in mano, senza volerlo.
 
-### C · Dalle misure alle soglie (60')
+### C · Dalle misure alle soglie (45')
 
 Per ogni senso il gruppo disegna una **retta dei valori**: sotto, le situazioni che non devono far scattare l'evento; sopra, quelle che devono. Poi ci colloca la soglia del §5.1.
 
@@ -172,7 +172,7 @@ Per ogni senso il gruppo disegna una **retta dei valori**: sotto, le situazioni 
 
 Il caso da guardare con attenzione: **camminare con la creatura in tasca supera 1,5 g?** Se sì, ogni passeggiata è una serie di scosse, e la creatura neutra si spaventa a ogni passo.
 
-### D · Il corpo della creatura (45')
+### D · Il corpo della creatura (30')
 
 Dalle misure al carattere. Ogni gruppo, sulla propria idea di specie della lezione 2:
 

@@ -2,7 +2,7 @@
 
 Interaction Design 2026–27 · Creature in rete · piano di lezione · bozza 16 ottobre 2026 · Bruno
 
-Macchine a stati finiti, bisogni e variabili nel tempo, gestione delle transizioni. **2 ore frontali + 5 ore di progettazione di gruppo** su carta: i dispositivi arrivano alla lezione 3.
+Macchine a stati finiti, bisogni e variabili nel tempo, gestione delle transizioni. **2 ore frontali + 5 ore di progettazione di gruppo**, pranzo compreso, su carta: i dispositivi arrivano alla lezione 3.
 
 ## Obiettivi
 
@@ -108,7 +108,7 @@ Presentazione dei blocchi del lavoro di gruppo e della consegna di fine giornata
 
 ---
 
-## Lavoro di gruppo · 5 ore · la vita delle creature
+## Lavoro di gruppo · 5 ore con il pranzo · la vita delle creature
 
 Progettazione "macro": non si progetta ancora cosa fa la creatura quando la tocchi, ma **come scorre la sua vita** nell'arco di ore e di giorni.
 
@@ -116,10 +116,10 @@ Progettazione "macro": non si progetta ancora cosa fa la creatura quando la tocc
 | --- | --- | --- |
 | 0:00 | A · Simulare a mano una mattina | 60' |
 | 1:00 | B · Grafici a parete e discussione | 30' |
-| 1:30 | pausa | 15' |
-| 1:45 | C · Il carattere e la giornata tipo | 90' |
-| 3:15 | D · Scambio: un altro gruppo vive la vostra creatura | 60' |
-| 4:15 | E · Pin-up e critica | 45' |
+| 1:30 | pranzo | 60' |
+| 2:30 | C · Il carattere e la giornata tipo | 75' |
+| 3:45 | D · Scambio: un altro gruppo vive la vostra creatura | 45' |
+| 4:30 | E · Pin-up e critica | 30' |
 
 ### A · Simulare a mano una mattina (60')
 
@@ -174,27 +174,27 @@ Domande per la discussione:
 - Quale stato non è mai comparso, e perché?
 - Quattro ore sono tante o poche per capire una creatura? E un giorno, una settimana?
 
-### C · Il carattere e la giornata tipo (90')
+### C · Il carattere e la giornata tipo (75')
 
 Ogni gruppo comincia a progettare la propria specie a partire dal tempo. I cinque caratteri del documento (§9.4) sono esempi da trasformare, non un menu.
 
-1. **Idea in una frase** (15'). Chi è la creatura e che rapporto vuole con le persone e con le altre.
-2. **Ritmi** (20'). Per ogni bisogno: decade più in fretta o più piano della neutra? Quali soglie spostare (fame, sonno, noia, spavento, malattia)? Scrivere i valori nella tabella dei parametri: è la prima bozza di `config.h`.
+1. **Idea in una frase** (10'). Chi è la creatura e che rapporto vuole con le persone e con le altre.
+2. **Ritmi** (15'). Per ogni bisogno: decade più in fretta o più piano della neutra? Quali soglie spostare (fame, sonno, noia, spavento, malattia)? Scrivere i valori nella tabella dei parametri: è la prima bozza di `config.h`.
 3. **Lo stato proprio** (15'). Il momento che nessun'altra creatura ha. Un nome, quando scatta (bisogni, ora, vicini, contesto, contatori), quando finisce, cosa fa ai bisogni, come si riconosce senza confonderlo con il sonno, cosa costa a chi la cura. Controllare che stia nei limiti del §4.4.
-4. **Giornata tipo** (30'). Su un foglio A1, una timeline di 24 ore: le quattro linee dei bisogni come ve le aspettate e la striscia degli stati, con lo stato proprio in un colore suo. Segnare i momenti chiave: quando dorme, quando chiede, quando sta meglio, quando entra nello stato proprio, cosa succede di notte, cosa succede se la si dimentica nel cassetto per un weekend.
+4. **Giornata tipo** (25'). Su un foglio A1, una timeline di 24 ore: le quattro linee dei bisogni come ve le aspettate e la striscia degli stati, con lo stato proprio in un colore suo. Segnare i momenti chiave: quando dorme, quando chiede, quando sta meglio, quando entra nello stato proprio, cosa succede di notte, cosa succede se la si dimentica nel cassetto per un weekend.
 5. **Lungo termine** (10'). Quali contatori di vita usa e cosa cambiano dopo una settimana o dopo una rinascita.
 
 Domande guida al tavolo: *cosa fa quando nessuno la guarda? cosa la fa ammalare? quanto dura un ciclo di cura? la sua fragilità è un piacere o un fastidio per chi la cura?*
 
-### D · Scambio: un altro gruppo vive la vostra creatura (60')
+### D · Scambio: un altro gruppo vive la vostra creatura (45')
 
-I gruppi si scambiano tabella dei parametri e regole (non la giornata tipo). Ogni gruppo simula la creatura di un altro per 12 turni con il mazzo "distratta" (30'), poi le due squadre confrontano il grafico ottenuto con la giornata tipo attesa (30').
+I gruppi si scambiano tabella dei parametri e regole (non la giornata tipo). Ogni gruppo simula la creatura di un altro per 12 turni con il mazzo "distratta" (25'), poi le due squadre confrontano il grafico ottenuto con la giornata tipo attesa (20').
 
 Dove i due grafici divergono, il carattere non è ancora nei numeri: si corregge la tabella.
 
-### E · Pin-up e critica (45')
+### E · Pin-up e critica (30')
 
-Ogni gruppo ha 5 minuti più 3 di domande: idea, giornata tipo, la correzione più importante emersa dallo scambio. Si guarda soprattutto se il carattere si legge **nel tempo**, prima ancora che nell'espressione.
+Ogni gruppo ha 4 minuti più 2 di domande: idea, giornata tipo, la correzione più importante emersa dallo scambio. Si guarda soprattutto se il carattere si legge **nel tempo**, prima ancora che nell'espressione.
 
 ---
 
