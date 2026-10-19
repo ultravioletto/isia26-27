@@ -61,3 +61,12 @@ Le prove sul dispositivo, una cartella per sketch.
 ## Hardware
 
 M5Stack **CoreS3** (anche Core2, con i sensi in comune: IMU, microfono, touch). Le specie progettano su questi sensi; luce, prossimità e vibrazione sono un di più. I dettagli sono in [PROGETTO.md §3](project/PROGETTO.md).
+
+## Licenza
+
+© 2026 ultravioletto. Tutto il contenuto del repository, documenti e codice, è distribuito con licenza [Creative Commons Attribuzione – Non commerciale – Condividi allo stesso modo 4.0 Internazionale (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.it). Il testo completo è nel file [LICENSE](LICENSE).
+
+In breve, si può copiare, distribuire e modificare il materiale a tre condizioni:
+- **Attribuzione:** si cita la fonte.
+- **Non commerciale:** non si usa a scopo di lucro.
+- **Condividi allo stesso modo:** le opere derivate escono con la stessa licenza.
