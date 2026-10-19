@@ -4,7 +4,7 @@
 #include <M5CoreS3.h>
 #include <math.h>
 namespace interferenze {
-#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 // =====================================================================
 //  Interference Patterns
 //  Onde in un piatto circolare: sorgenti puntiformi che oscillano,
@@ -59,29 +59,29 @@ static constexpr float RAGGIO = N / 2 - 2;                // margine: i vicini d
 static constexpr float RAGGIO_SORGENTI = RAGGIO - 3;      // dove le sorgenti toccano il bordo
 M5Canvas tela(&CoreS3.Display);
 
-#line 57 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 57 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
-#line 80 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 80 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 void prepara();
-#line 93 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 93 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 int cella(float sx, float sy);
-#line 100 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 100 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 void simula();
-#line 117 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 117 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 float senzaZonaMorta(float g);
-#line 123 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 123 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 void muoviSorgenti(float dt);
-#line 150 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 150 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 void disegna(float f);
-#line 181 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 181 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 void scriviStato();
-#line 189 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 189 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 void disegnaVelocita();
-#line 202 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 202 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 void setup();
-#line 224 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 224 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 void loop();
-#line 57 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\InterferencePatterns\\InterferencePatterns.ino"
+#line 57 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\InterferencePatterns\\InterferencePatterns.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }

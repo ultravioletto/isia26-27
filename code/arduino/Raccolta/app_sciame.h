@@ -5,7 +5,7 @@
 #include <math.h>
 #include <esp_memory_utils.h>
 namespace sciame {
-#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 // =====================================================================
 //  Prova Sciame
 //  Uno sciame di particelle (boids) che fluttua intorno a un punto.
@@ -76,51 +76,51 @@ static constexpr int W = 320, H = 240;
 M5Canvas tela(&CoreS3.Display);
 struct Rett { int x0, y0, x1, y1; };        // rettangolo a schermo, estremi inclusi
 
-#line 74 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 74 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
-#line 80 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 80 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 uint16_t mescola(uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2, float t);
-#line 85 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 85 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 float casuale();
-#line 104 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 104 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void bloccoPronto(void*, void* dati, size_t n);
-#line 113 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 113 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 float aggiornaFondo(float& fondo, float db, float dt);
-#line 120 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 120 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void liscia(float& v, float bersaglio, float dt);
-#line 125 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 125 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void analizzaAudio(float dt);
-#line 150 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 150 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void muoviBersaglio(float gx, float gy, float dt);
-#line 167 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 167 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 float verso(float silenzio, float suono);
-#line 169 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 169 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void preparaSciame();
-#line 177 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 177 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void passoSciame(float dt);
-#line 237 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 237 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void calcolaRett();
-#line 247 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 247 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 Rett unione(const Rett& a, const Rett& b);
-#line 255 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 255 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void puntoVeloce(uint16_t* buf, int px, int py, uint16_t c);
-#line 259 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 259 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void lineaVeloce(uint16_t* buf, int x0, int y0, int x1, int y1, uint16_t c);
-#line 272 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 272 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void disegnaSciame(M5Canvas& c);
-#line 297 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 297 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void misura(float& media, uint32_t t0);
-#line 301 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 301 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void disegnaDebug(M5Canvas& c, float gx, float gy);
-#line 317 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 317 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void pulisci(M5Canvas& c, const Rett& r);
-#line 323 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 323 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void invia(const Rett& r);
-#line 330 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 330 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void setup();
-#line 359 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 359 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 void loop();
-#line 74 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSciame\\ProvaSciame.ino"
+#line 74 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSciame\\ProvaSciame.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }

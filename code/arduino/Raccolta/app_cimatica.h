@@ -4,7 +4,7 @@
 #include <M5CoreS3.h>
 #include <math.h>
 namespace cimatica {
-#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaCimatica\\ProvaCimatica.ino"
+#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaCimatica\\ProvaCimatica.ino"
 // =====================================================================
 //  Prova Cimatica
 //  I modi di vibrazione di una membrana circolare, come l'acqua in un
@@ -31,19 +31,19 @@ static constexpr int W = 320, H = 240;
 static constexpr int L = 240, X0 = (W - L) / 2;     // il piatto: quadrato centrale 240 x 240
 M5Canvas tela(&CoreS3.Display);
 
-#line 29 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaCimatica\\ProvaCimatica.ino"
+#line 29 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaCimatica\\ProvaCimatica.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
-#line 60 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaCimatica\\ProvaCimatica.ino"
+#line 60 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaCimatica\\ProvaCimatica.ino"
 void calcolaForma(int8_t* f, int m, int n);
-#line 72 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaCimatica\\ProvaCimatica.ino"
+#line 72 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaCimatica\\ProvaCimatica.ino"
 void preparaCombinazione();
-#line 95 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaCimatica\\ProvaCimatica.ino"
+#line 95 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaCimatica\\ProvaCimatica.ino"
 void disegna(float t);
-#line 108 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaCimatica\\ProvaCimatica.ino"
+#line 108 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaCimatica\\ProvaCimatica.ino"
 void setup();
-#line 131 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaCimatica\\ProvaCimatica.ino"
+#line 131 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaCimatica\\ProvaCimatica.ino"
 void loop();
-#line 29 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaCimatica\\ProvaCimatica.ino"
+#line 29 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaCimatica\\ProvaCimatica.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }

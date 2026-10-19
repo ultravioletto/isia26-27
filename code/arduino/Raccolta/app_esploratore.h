@@ -9,7 +9,7 @@
 #include <M5CoreS3.h>
 #include <math.h>
 namespace esploratore {
-#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 // =====================================================================
 //  Esploratore CoreS3
 //  Una pagina per ogni sensore e uscita del M5Stack CoreS3.
@@ -35,91 +35,91 @@ static constexpr int W = 320, H = 240, TOP = 48;   // barra di navigazione in al
 static constexpr int TASTO = 80;                   // larghezza dei tasti < e > nella barra
 M5Canvas tela(&CoreS3.Display);                      // disegno fuori schermo, 320 x 192
 
-#line 33 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 33 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
-#line 52 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 52 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 const char * nomeBoard();
-#line 59 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 59 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 const char * nomeImu();
-#line 66 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 66 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 const char * nomePmic();
-#line 80 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 80 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void messaggio(M5Canvas& c, const char* s);
-#line 88 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 88 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void barraBipolare(M5Canvas& c, int x, int y, int w, int h, float v, float vmax, uint16_t col, const char* nome, const char* unita);
-#line 106 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 106 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void barra(M5Canvas& c, int x, int y, int w, int h, float f, uint16_t col);
-#line 112 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 112 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void disegnaBarraNavigazione();
-#line 130 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 130 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void entraPagina(int p);
-#line 137 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 137 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void cambiaPagina(int delta);
-#line 145 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 145 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaInfo(M5Canvas& c);
-#line 170 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 170 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaAccel(M5Canvas& c);
-#line 203 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 203 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaGyro(M5Canvas& c);
-#line 221 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 221 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaBussola(M5Canvas& c);
-#line 272 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 272 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaLuce(M5Canvas& c);
-#line 302 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 302 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaCamera();
-#line 332 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 332 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 float dbfs(double somma);
-#line 337 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 337 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void formaOnda(M5Canvas& c, int canale, int cy, int amp, uint16_t col);
-#line 348 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 348 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void livelloMic(M5Canvas& c, int y, const char* nome, float db, float& tenuta, uint32_t& tTenuta, uint16_t col);
-#line 358 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 358 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaMic(M5Canvas& c);
-#line 405 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 405 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaTouch(M5Canvas& c);
-#line 441 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 441 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaSpeaker(M5Canvas& c);
-#line 476 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 476 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaPower(M5Canvas& c);
-#line 511 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 511 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 float forzaSegnale(int rssi);
-#line 512 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 512 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 uint16_t coloreSegnale(int rssi);
-#line 514 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 514 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 String macBreve(const uint8_t* m);
-#line 528 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 528 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void aggiornaWifi();
-#line 553 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 553 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaWifi(M5Canvas& c);
-#line 599 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 599 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void fineScanBle(BLEScanResults);
-#line 601 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 601 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void aggiornaBle();
-#line 630 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 630 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaBle(M5Canvas& c);
-#line 665 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 665 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void riceviEspNow(const esp_now_recv_info_t* info, const uint8_t* dati, int len);
-#line 685 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 685 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void avviaEspNow();
-#line 699 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 699 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaEspNow(M5Canvas& c);
-#line 747 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 747 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 const char * nomeI2C(uint8_t a, bool interno);
-#line 771 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 771 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void scansioneI2C();
-#line 783 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 783 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void colonnaI2C(M5Canvas& c, int x, const char* titolo, bool* trovati, bool interno);
-#line 798 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 798 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaI2C(M5Canvas& c);
-#line 816 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 816 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void leggiSD();
-#line 841 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 841 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void paginaSD(M5Canvas& c);
-#line 861 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 861 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void setup();
-#line 900 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 900 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 void loop();
-#line 33 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
+#line 33 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\EsploratoreCoreS3\\EsploratoreCoreS3.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }

@@ -4,7 +4,7 @@
 #include <M5CoreS3.h>
 #include <math.h>
 namespace scatola {
-#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 // =====================================================================
 //  Prova Scatola
 //  Una stanza vettoriale, come i primi videogiochi: griglia blu su
@@ -74,69 +74,69 @@ struct Oggetto {
   uint16_t col;
 };
 
-#line 72 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 72 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
-#line 77 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 77 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 uint16_t mescola(uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2, float t);
-#line 82 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 82 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 float casuale();
-#line 84 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 84 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 V3 operator +(V3 a, V3 b);
-#line 85 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 85 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 V3 operator -(V3 a, V3 b);
-#line 86 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 86 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 V3 operator *(V3 a, float k);
-#line 87 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 87 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 float punto(V3 a, V3 b);
-#line 88 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 88 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 V3 croce(V3 a, V3 b);
-#line 89 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 89 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 float lungo(V3 a);
-#line 90 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 90 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 V3 unita(V3 a);
-#line 107 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 107 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void bloccoPronto(void*, void* dati, size_t n);
-#line 116 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 116 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 float aggiornaFondo(float& fondo, float db, float dt);
-#line 123 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 123 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 float ascolta(float dt);
-#line 150 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 150 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void proietta(V3 p, int16_t& sx, int16_t& sy);
-#line 157 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 157 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 uint16_t coloreStanza(float z);
-#line 162 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 162 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void linea(M5Canvas& c, V3 a, V3 b, uint16_t col);
-#line 169 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 169 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void lineaProfonda(M5Canvas& c, V3 a, V3 b);
-#line 177 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 177 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void disegnaStanza(M5Canvas& c);
-#line 223 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 223 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 V3 ruota(const Oggetto& o, V3 q);
-#line 225 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 225 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 int vertici(const Oggetto& o, V3* out);
-#line 231 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 231 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void preparaOggetti();
-#line 242 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 242 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void integraRotazione(Oggetto& o, float dt);
-#line 258 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 258 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void tocca(Oggetto& o, V3 n, float dt);
-#line 268 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 268 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void passoOggetto(Oggetto& o, V3 g, float dt);
-#line 295 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 295 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void salta(Oggetto& o, V3 g, float forza);
-#line 305 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 305 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void disegnaSfera(M5Canvas& c, const Oggetto& o);
-#line 330 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 330 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void disegnaOggetto(M5Canvas& c, const Oggetto& o);
-#line 346 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 346 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void misura(float& media, uint32_t t0);
-#line 350 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 350 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void disegnaDebug(M5Canvas& c, V3 g);
-#line 362 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 362 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void setup();
-#line 391 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 391 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 void loop();
-#line 72 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaScatola\\ProvaScatola.ino"
+#line 72 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaScatola\\ProvaScatola.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }

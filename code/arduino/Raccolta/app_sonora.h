@@ -7,7 +7,7 @@
 #include <M5CoreS3.h>
 #include <math.h>
 namespace sonora {
-#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 // =====================================================================
 //  Prova Sonora CoreS3
 //  Per ascoltare in stanza cosa sa fare l'altoparlante del CoreS3: timbri,
@@ -73,77 +73,77 @@ static constexpr int RIGA = 64, BW = 72, BH = 56;            // righe di imposta
 enum Pagina { P_SUONA, P_SUONO, P_USCITA, N_PAGINE };
 const char* NOMI_PAGINE[N_PAGINE] = { "SUONA", "SUONO", "USCITA" };
 int pagina = P_SUONA;
-#line 71 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 71 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
-#line 108 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 108 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 bool presente(int id);
-#line 109 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 109 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 int miaVoce();
-#line 110 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 110 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 int presenti();
-#line 124 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 124 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 float freqMidi(float m);
-#line 126 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 126 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 String nomeNota(int m);
-#line 128 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 128 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void preparaTabelle();
-#line 141 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 141 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 float inviluppo(int tipo, float t, float d);
-#line 168 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 168 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 float rumore();
-#line 174 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 174 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 int genera(int16_t* buf, float f, int timbro, int inv, float ampiezza);
-#line 218 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 218 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void suona(float f, float ampiezza);
-#line 238 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 238 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 int grado(int k);
-#line 242 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 242 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 int notaMidi(int k);
-#line 249 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 249 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 int gradoComune();
-#line 253 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 253 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void preparaSweep();
-#line 270 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 270 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void esegui(uint8_t azione, bool diviso);
-#line 316 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 316 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 uint32_t periodo();
-#line 318 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 318 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void fermaLoop();
-#line 328 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 328 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void avviaLoop(uint8_t azione, bool diviso, uint8_t s);
-#line 345 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 345 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void premi(uint8_t azione);
-#line 354 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 354 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void aggiornaLoop();
-#line 378 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 378 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void ricevi(const esp_now_recv_info_t* info, const uint8_t* dati, int len);
-#line 389 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 389 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void manda(uint8_t azione, uint8_t s);
-#line 394 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 394 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void mandaPresenza();
-#line 403 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 403 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 int tastoX(int i);
-#line 404 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 404 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 int tastoY(int i);
-#line 407 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 407 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 float frequenzaSweep();
-#line 410 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 410 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void disegnaTasto(int i);
-#line 427 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 427 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void disegnaRiga(int r, const char* etichetta, const String& valore, uint16_t colValore);
-#line 445 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 445 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void disegna();
-#line 483 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 483 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void anteprima();
-#line 488 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 488 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void cambiaPagina(int p);
-#line 493 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 493 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void tocco(int x, int y);
-#line 529 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 529 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void setup();
-#line 560 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 560 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 void loop();
-#line 71 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaSonora\\ProvaSonora.ino"
+#line 71 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaSonora\\ProvaSonora.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }

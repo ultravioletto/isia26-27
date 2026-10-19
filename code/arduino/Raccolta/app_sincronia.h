@@ -8,7 +8,7 @@
 #include <M5CoreS3.h>
 #include <math.h>
 namespace sincronia {
-#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 // =====================================================================
 //  Test Sincronia CoreS3
 //  Prova dell'orologio condiviso dell'unisono (PROGETTO.md, par. 8.2-8.3)
@@ -136,65 +136,65 @@ const uint8_t BROADCAST[6] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };   // "a tut
 static constexpr int W = 320, H = 240, BARRA = 40;   // BARRA: altezza della barra informazioni in alto
 
 // colore a 16 bit (5 bit rosso, 6 verde, 5 blu), il formato del display
-#line 134 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 134 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
-#line 192 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 192 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 bool isolato();
-#line 193 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 193 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 bool inRiposo();
-#line 199 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 199 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 double oraMs();
-#line 204 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 204 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void stampa(const char* formato, ...);
-#line 224 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 224 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void ricevi(const esp_now_recv_info_t* info, const uint8_t* dati, int len);
-#line 246 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 246 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 bool estrai(Arrivo& a);
-#line 257 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 257 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void intestazione(Intestazione& h, uint8_t tipo);
-#line 262 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 262 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void invia(const void* p, size_t n);
-#line 266 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 266 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void inviaAnnuncio();
-#line 274 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 274 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void inviaSync();
-#line 284 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 284 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void inviaFine(uint8_t motivo);
-#line 297 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 297 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 long passoCorrente();
-#line 299 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 299 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void cambiaRuolo(Ruolo r);
-#line 306 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 306 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void apriSessione();
-#line 316 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 316 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void chiudi();
-#line 324 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 324 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void finisci(const char* perche);
-#line 333 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 333 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 double residuoMs();
-#line 337 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 337 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 bool sonoIlPiuBasso();
-#line 344 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 344 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 int viciniInSessione();
-#line 352 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 352 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void gestisciSync(const Sync& s, double tArrivo);
-#line 411 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 411 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void avvia();
-#line 422 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 422 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void gestisciPacchetto(const Arrivo& a);
-#line 471 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 471 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void eseguiComando(String c);
-#line 495 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 495 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void leggiComandi();
-#line 509 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 509 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void disegnaInfo();
-#line 537 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 537 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void disegnaCorpo(long battito);
-#line 558 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 558 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void setup();
-#line 591 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 591 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 void loop();
-#line 134 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\TestSincronia\\TestSincronia.ino"
+#line 134 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\TestSincronia\\TestSincronia.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }

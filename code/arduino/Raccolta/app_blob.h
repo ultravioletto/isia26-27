@@ -4,7 +4,7 @@
 #include <M5CoreS3.h>
 #include <math.h>
 namespace blob {
-#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 1 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 // =====================================================================
 //  Prova Blob
 //  Un blob 2D che rotola seguendo l'inclinazione del CoreS3 e si
@@ -52,51 +52,51 @@ static constexpr int W = 320, H = 240;
 M5Canvas tela(&CoreS3.Display);
 struct Rett { int x0, y0, x1, y1; };        // rettangolo a schermo, estremi inclusi
 
-#line 50 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 50 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b);
-#line 55 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 55 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 uint16_t mescola(uint8_t r1, uint8_t g1, uint8_t b1, uint8_t r2, uint8_t g2, uint8_t b2, float t);
-#line 74 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 74 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void bloccoPronto(void*, void* dati, size_t n);
-#line 83 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 83 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void leggiFinestra();
-#line 94 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 94 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void fft(float* x, float* y, int n);
-#line 117 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 117 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 float aggiornaFondo(float& fondo, float db, float dt);
-#line 124 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 124 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void liscia(float& v, float bersaglio, float dt);
-#line 129 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 129 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void analizzaAudio(const int16_t* s, float dt);
-#line 153 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 153 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void preparaAudio();
-#line 173 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 173 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void preparaBlob();
-#line 188 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 188 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void preparaArmoniche();
-#line 196 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 196 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void calcolaBersaglio();
-#line 210 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 210 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void passoBlob(float gx, float gy, float dt);
-#line 259 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 259 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void calcolaContorno();
-#line 270 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 270 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 Rett unione(const Rett& a, const Rett& b);
-#line 274 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 274 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void disegnaBlob(M5Canvas& c);
-#line 298 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 298 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void misura(float& media, uint32_t t0);
-#line 302 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 302 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void disegnaDebug(M5Canvas& c, float gx, float gy);
-#line 318 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 318 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void pulisci(M5Canvas& c, const Rett& r);
-#line 324 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 324 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void invia(const Rett& r);
-#line 331 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 331 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void setup();
-#line 362 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 362 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 void loop();
-#line 50 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\CODE\\ARDUINO\\ProvaBlob\\ProvaBlob.ino"
+#line 50 "C:\\Users\\admin\\Documents\\LAVORI\\ISIA\\isia 26 - 27\\code\\arduino\\ProvaBlob\\ProvaBlob.ino"
 constexpr uint16_t rgb(uint8_t r, uint8_t g, uint8_t b) {
   return ((r & 0xF8) << 8) | ((g & 0xFC) << 3) | (b >> 3);
 }
