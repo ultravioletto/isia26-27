@@ -64,9 +64,16 @@ M5Stack **CoreS3** (anche Core2, con i sensi in comune: IMU, microfono, touch). 
 
 ## Licenza
 
-© 2026 ultravioletto. Tutto il contenuto del repository, documenti e codice, è distribuito con licenza [Creative Commons Attribuzione – Non commerciale – Condividi allo stesso modo 4.0 Internazionale (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.it). Il testo completo è nel file [LICENSE](LICENSE).
+© 2026 ultravioletto. Due licenze, entrambe non commerciali:
 
-In breve, si può copiare, distribuire e modificare il materiale a tre condizioni:
+| Cosa | Licenza | Testo |
+| --- | --- | --- |
+| Il codice, nella cartella `code/` | [PolyForm Noncommercial 1.0.0](https://polyformproject.org/licenses/noncommercial/1.0.0) | [code/LICENSE.md](code/LICENSE.md) |
+| Tutto il resto: documenti, materiali del corso, pagine HTML | [Creative Commons Attribuzione – Non commerciale – Condividi allo stesso modo 4.0 (CC BY-NC-SA 4.0)](https://creativecommons.org/licenses/by-nc-sa/4.0/deed.it) | [LICENSE](LICENSE) |
+
+**Il codice** si può usare, modificare e distribuire per qualsiasi scopo non commerciale: studio, ricerca, uso personale, scuole e enti senza fini di lucro. Chi lo distribuisce deve includere la licenza e la riga `Required Notice` in testa al file.
+
+**I materiali** si possono copiare, distribuire e modificare a tre condizioni:
 - **Attribuzione:** si cita la fonte.
 - **Non commerciale:** non si usa a scopo di lucro.
 - **Condividi allo stesso modo:** le opere derivate escono con la stessa licenza.
