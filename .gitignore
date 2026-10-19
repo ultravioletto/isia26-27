@@ -1,0 +1,13 @@
+# file di sistema
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# compilazione Arduino e Python
+build/
+*.bin
+*.elf
+__pycache__/
+
+# log del banco di prova
+*.log

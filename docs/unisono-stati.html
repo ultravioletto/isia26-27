@@ -1,0 +1,520 @@
+<title>Macchina dell'unisono</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Schibsted+Grotesk:wght@600;700&display=swap">
+<style>
+/* Layout: specifica tecnica a colonna unica; testo a 70ch, tabelle e diagrammi più larghi in contenitori scorrevoli */
+:root {
+  --bg: #f5f6f8;
+  --surface: #ffffff;
+  --fg: #16181d;
+  --muted: #5a6170;
+  --line: #d8dce3;
+  --accent: #a87300;        /* il colore di grazia */
+  --accent-soft: #f7ebcb;
+  --ok: #2c7a58;
+  --warn: #b0502a;
+  --warn-soft: #f8e3d9;
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101216; --surface: #171a20; --fg: #e6e8ed; --muted: #9aa1ae; --line: #2a2f38;
+    --accent: #f0c24b; --accent-soft: #3a2f12; --ok: #5cc497; --warn: #f08a5d; --warn-soft: #3a2117;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101216; --surface: #171a20; --fg: #e6e8ed; --muted: #9aa1ae; --line: #2a2f38;
+  --accent: #f0c24b; --accent-soft: #3a2f12; --ok: #5cc497; --warn: #f08a5d; --warn-soft: #3a2117;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 16px/1.6 var(--body);
+  padding-inline: 20px; padding-block: 40px 80px;
+}
+.pagina { max-width: 1060px; margin: 0 auto; display: grid; gap: 56px; }
+.testo { max-width: 70ch; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(2rem, 5vw, 3rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.6rem; }
+h3 { font-size: 1.15rem; margin-top: 8px; }
+p { margin: 0; }
+section { display: grid; gap: 18px; }
+.occhiello {
+  font: 500 0.75rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent);
+}
+.sotto { color: var(--muted); font-size: 1.05rem; }
+a { color: var(--accent); }
+
+.s {   /* nome di uno stato */
+  font: 500 0.82em/1 var(--mono); letter-spacing: 0.04em;
+  padding: 2px 6px; border: 1px solid var(--line); border-radius: 4px;
+  background: var(--surface); white-space: nowrap;
+}
+.s.g { border-color: var(--accent); background: var(--accent-soft); }
+code, .m { font-family: var(--mono); font-size: 0.88em; }
+
+.indice { display: flex; flex-wrap: wrap; gap: 8px 18px; font-size: 0.92rem; }
+.indice a { text-decoration: none; border-bottom: 1px solid var(--line); color: var(--fg); }
+.indice a:hover, .indice a:focus-visible { border-color: var(--accent); }
+
+.legenda { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+.legenda div { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; padding: 12px 14px; min-width: 0; }
+.legenda b { display: block; font: 500 0.8rem/1.3 var(--mono); color: var(--accent); margin-bottom: 4px; }
+.legenda span { font-size: 0.92rem; color: var(--muted); }
+
+.diagramma {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px;
+  padding: 20px; overflow-x: auto;
+}
+.diagramma pre.mermaid { margin: 0; text-align: center; background: transparent; }
+.didascalia { font-size: 0.88rem; color: var(--muted); }
+
+.tab { overflow-x: auto; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.9rem; }
+th, td { text-align: left; vertical-align: top; padding: 9px 12px; border-bottom: 1px solid var(--line); }
+th { font: 500 0.72rem/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); background: var(--bg); }
+tr:last-child td { border-bottom: 0; }
+td.id { font-family: var(--mono); color: var(--muted); white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.v { font-family: var(--mono); white-space: nowrap; font-variant-numeric: tabular-nums; }
+.gruppo td { background: var(--bg); font: 600 0.8rem/1.3 var(--body); color: var(--fg); }
+.nuovo { font: 500 0.7rem/1 var(--mono); color: var(--warn); background: var(--warn-soft); padding: 2px 5px; border-radius: 3px; white-space: nowrap; }
+
+.casi { display: grid; gap: 14px; }
+.caso { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); padding: 16px 18px; display: grid; gap: 8px; min-width: 0; }
+.caso h3 { margin: 0; font-size: 1.05rem; }
+.caso dl { display: grid; grid-template-columns: 9.5em 1fr; gap: 4px 14px; margin: 0; font-size: 0.93rem; }
+.caso dt { color: var(--muted); }
+.caso dd { margin: 0; min-width: 0; }
+.caso.rischio { border-color: var(--warn); }
+@media (max-width: 560px) { .caso dl { grid-template-columns: 1fr; } .caso dt { margin-top: 6px; } }
+
+ol.regole, ul.punti { margin: 0; padding-left: 1.3em; display: grid; gap: 8px; max-width: 75ch; }
+.nota { border-left: 3px solid var(--accent); padding: 4px 0 4px 14px; max-width: 75ch; }
+.attenzione { border-left: 3px solid var(--warn); padding: 4px 0 4px 14px; max-width: 75ch; }
+.stato-test { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 14px; }
+.stato-test > div { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px 18px; min-width: 0; }
+.stato-test h3 { margin: 0 0 8px; font-size: 1rem; }
+.stato-test ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 0.93rem; }
+.si h3 { color: var(--ok); } .no h3 { color: var(--warn); }
+</style>
+
+<main class="pagina">
+
+<header class="testo" style="display:grid;gap:14px">
+  <span class="occhiello">Creature in rete · approfondimento del par. 8</span>
+  <h1>Macchina dell'unisono</h1>
+  <p class="sotto">Lo stato di grazia descritto come macchina a stati finiti: quando una creatura diventa attiva, come entra, come esce, cosa succede quando qualcosa va storto e come si recupera.</p>
+  <nav class="indice" aria-label="Indice">
+    <a href="#convenzioni">Convenzioni</a>
+    <a href="#creatura">Livello creatura</a>
+    <a href="#sessione">Livello sessione</a>
+    <a href="#grazia">Dentro la grazia</a>
+    <a href="#voce">La voce</a>
+    <a href="#aggancio">L'aggancio</a>
+    <a href="#transizioni">Transizioni</a>
+    <a href="#timer">Timer</a>
+    <a href="#eccezioni">Eccezioni e recupero</a>
+    <a href="#invarianti">Invarianti</a>
+    <a href="#decisioni">Decisioni aperte</a>
+    <a href="#test">Stato nel TestSincronia</a>
+  </nav>
+</header>
+
+<section id="convenzioni">
+  <span class="occhiello">Convenzioni</span>
+  <h2>Come leggere la macchina</h2>
+  <p class="testo">La macchina è <b>gerarchica</b>: la creatura ha i suoi stati di vita (par. 4.2) e uno di questi, <span class="s g">UNISONO</span>, contiene una seconda macchina che descrive la sessione. Dentro la grazia lavorano tre <b>regioni parallele</b>, attive insieme: chi tiene l'orologio, come suona la voce, quanto è agganciato il tempo. Ogni dispositivo esegue la propria copia della macchina: nessuno comanda gli altri, ognuno reagisce a ciò che sente.</p>
+  <div class="legenda">
+    <div><b>STATO</b><span>una condizione stabile in cui il dispositivo resta finché non arriva un evento</span></div>
+    <div><b>evento</b><span>qualcosa che succede: un pacchetto radio, un timer che scade, un gesto</span></div>
+    <div><b>[guardia]</b><span>una condizione che deve essere vera perché l'evento faccia scattare la transizione</span></div>
+    <div><b>/ azione</b><span>ciò che il dispositivo fa mentre passa da uno stato all'altro</span></div>
+    <div><b>entrata / uscita</b><span>azioni eseguite ogni volta che si entra o si esce da uno stato, da qualsiasi parte</span></div>
+    <div><b><span class="nuovo">nuovo</span></b><span>regola o parametro che PROGETTO.md non prevede ancora e che questa pagina propone</span></div>
+  </div>
+</section>
+
+<section id="creatura">
+  <span class="occhiello">Livello 1</span>
+  <h2>La creatura e lo stato di grazia</h2>
+  <p class="testo">Visto dalla creatura, l'unisono è una parentesi. Si entra da quasi qualsiasi stato di vita, si mette da parte quello stato e lo si ritrova identico all'uscita. È l'equivalente dello <i>stato storico</i> delle macchine gerarchiche: all'uscita non si torna a <span class="s">SVEGLIO</span> ma allo stato in cui si era.</p>
+  <div class="diagramma">
+<pre class="mermaid">
+stateDiagram-v2
+  direction LR
+  [*] --> VITA
+  state VITA {
+    direction LR
+    [*] --> SVEGLIO
+    SVEGLIO --> ALTRI : soglie, gesti
+    ALTRI --> SVEGLIO : isteresi, tempo
+  }
+  VITA --> UNISONO : entra in grazia
+  UNISONO --> VITA : esce, torna allo stato salvato
+  VITA --> MORTO : salute a zero
+  MORTO --> VITA : pressione lunga 5 s
+</pre>
+  </div>
+  <p class="didascalia">ALTRI raggruppa DORME, AFFAMATO, GIOCOSO, ANNOIATO, PROPRIO, SPAVENTATO e MALATO, descritti nei par. 4.3 e 4.4.</p>
+
+  <div class="tab"><table>
+    <thead><tr><th>Momento</th><th>Cosa fa la creatura</th></tr></thead>
+    <tbody>
+      <tr><td><b>Entrata</b> in <span class="s g">UNISONO</span></td><td>salva lo stato di vita corrente con i suoi timer residui; <b>congela</b> bisogni, salute e contatori di decadimento; alza il flag "in unisono" nell'annuncio con il numero di sessione; sostituisce l'espressione dei bisogni con la parte musicale e il battito comune; avvia il contatore "minuti in unisono"</td></tr>
+      <tr><td><b>Durante</b></td><td>nessun bisogno decade e nessuna soglia viene valutata: una creatura affamata non stona. Restano attivi i sensi (servono allo strumento) e la rete</td></tr>
+      <tr><td><b>Uscita</b> da <span class="s g">UNISONO</span></td><td>riprende lo stato salvato con i timer dove erano (uno <span class="s">SPAVENTATO</span> con 8 s residui riparte da 8 s); riavvia il decadimento; abbassa il flag; registra i contatori di vita; salva in memoria</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="attenzione testo"><p><b>Un'incoerenza da risolvere nel par. 4.3.</b> L'ordine di priorità mette <span class="s">MALATO</span> sopra <span class="s g">UNISONO</span>, quindi una creatura malata non potrebbe stare in grazia. La tabella delle transizioni dice invece che si entra in unisono da "qualsiasi stato tranne MORTO". Le due regole non possono valere insieme: vedi la <a href="#decisioni">decisione 1</a>.</p></div>
+</section>
+
+<section id="sessione">
+  <span class="occhiello">Livello 2</span>
+  <h2>La sessione vista da un dispositivo</h2>
+  <p class="testo">Questa è la macchina che gira dentro ogni dispositivo per tutto il tempo, anche fuori dalla grazia: serve a decidere quando entrare. <span class="s g">GRAZIA</span> qui è un unico stato; il suo interno è nella sezione successiva. Lo stato di livello 1 <span class="s g">UNISONO</span> corrisponde esattamente a <span class="s g">GRAZIA</span> più <span class="s">USCENDO</span>.</p>
+  <div class="diagramma">
+<pre class="mermaid">
+stateDiagram-v2
+  [*] --> AVVIO
+  AVVIO --> FUORI : avvio normale
+  AVVIO --> RECUPERO : era in grazia prima del riavvio
+  RECUPERO --> GRAZIA : SYNC della stessa sessione
+  RECUPERO --> FUORI : silenzio 6 s
+  FUORI --> GRAZIA : innesco o tocco
+  FUORI --> INVITATO : SYNC valido
+  FUORI --> SPETTATORE : SYNC, ma dorme
+  INVITATO --> GRAZIA : prontezza e quorum
+  INVITATO --> FUORI : invito caduto o FINE
+  SPETTATORE --> INVITATO : si sveglia
+  SPETTATORE --> FUORI : FINE o silenzio 6 s
+  GRAZIA --> USCENDO : durata, FINE, gesto, scioglimento
+  USCENDO --> RIPOSO : dissolvenza finita
+  RIPOSO --> FUORI : 30 s
+  RIPOSO --> GRAZIA : rientro nella stessa sessione
+</pre>
+  </div>
+
+  <div class="tab"><table>
+    <thead><tr><th>Stato</th><th>Significato</th><th>Annuncia</th><th>Bisogni</th></tr></thead>
+    <tbody>
+      <tr><td><span class="s">AVVIO</span></td><td>pseudo-stato all'accensione: legge dalla memoria se la creatura era in grazia quando si è spenta</td><td>—</td><td>—</td></tr>
+      <tr><td><span class="s">FUORI</span></td><td>vita normale. Può proporre un unisono (innesco della specie) o accettarne uno (invito)</td><td>sessione 0</td><td>decadono</td></tr>
+      <tr><td><span class="s">INVITATO</span></td><td>ha sentito un SYNC e sta decidendo: aspetta la propria <b>prontezza</b> (0–10 s) e il <b>quorum</b> (quanti partecipanti devono già esserci). Continua la vita normale</td><td>sessione 0</td><td>decadono</td></tr>
+      <tr><td><span class="s">SPETTATORE</span></td><td>dorme e la specie non le permette di entrare: segue l'orologio solo per pulsare in sussurro col battito, senza suonare e senza annunciarsi in sessione</td><td>sessione 0</td><td>decadono (ritmo del sonno)</td></tr>
+      <tr><td><span class="s g">GRAZIA</span></td><td>dentro la sessione: suona, segue o tiene l'orologio. Ha tre regioni parallele</td><td>flag unisono + sessione</td><td>congelati</td></tr>
+      <tr><td><span class="s">USCENDO</span></td><td>dissolvenza d'uscita: la voce sfuma fino alla fine della battuta, poi la creatura torna allo stato salvato. <span class="nuovo">nuovo</span></td><td>flag unisono</td><td>congelati</td></tr>
+      <tr><td><span class="s">RIPOSO</span></td><td>la pausa di 30 s dopo una sessione: non propone e non accetta sessioni nuove. Può rientrare solo nella sessione da cui è uscito involontariamente</td><td>sessione 0</td><td>decadono</td></tr>
+      <tr><td><span class="s">RECUPERO</span></td><td>dopo un riavvio a sessione in corso: per 6 s ascolta se la sessione esiste ancora; se sì rientra subito, senza prontezza né quorum. <span class="nuovo">nuovo</span></td><td>sessione 0</td><td>fermi finché non decide</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="grazia">
+  <span class="occhiello">Dentro GRAZIA · regione 1</span>
+  <h2>Chi tiene l'orologio</h2>
+  <p class="testo">La prima regione dice che ruolo ha il dispositivo rispetto al tempo comune. Si entra come <span class="s">ORIGINE</span> se la creatura ha proposto la sessione, come <span class="s">PARTECIPANTE</span> se ha accettato un invito. Lo stato <span class="s">ORFANO</span> rende esplicito un momento che il par. 8.3 descrive solo a parole: l'origine tace, ma la musica continua sull'orologio di ciascuno.</p>
+  <div class="diagramma">
+<pre class="mermaid">
+stateDiagram-v2
+  state ingresso <<choice>>
+  [*] --> ingresso
+  ingresso --> ORIGINE : ha proposto
+  ingresso --> PARTECIPANTE : ha accettato
+  ORIGINE --> ORIGINE : ogni 2 s manda SYNC
+  PARTECIPANTE --> PARTECIPANTE : SYNC, corregge t0
+  PARTECIPANTE --> ORFANO : nessun SYNC da 3 s
+  ORFANO --> PARTECIPANTE : torna un SYNC
+  ORFANO --> ORIGINE : 6 s e sono il più basso
+  ORIGINE --> PARTECIPANTE : origine con id più basso
+  PARTECIPANTE --> PARTECIPANTE : sessione migliore, migra
+  ORIGINE --> [*] : solo da 10 s
+  ORFANO --> [*] : silenzio 15 s
+</pre>
+  </div>
+  <div class="tab"><table>
+    <thead><tr><th>Stato</th><th>Cosa fa</th><th>Trasmette</th></tr></thead>
+    <tbody>
+      <tr><td><span class="s">ORIGINE</span></td><td>tiene l'orologio: il suo <code>t0</code> è il riferimento. Conta i partecipanti visibili negli annunci</td><td>SYNC ogni 2 s, con il tempo trascorso</td></tr>
+      <tr><td><span class="s">PARTECIPANTE</span></td><td>calcola il passo dal proprio <code>t0</code>, lo corregge a ogni SYNC, inoltra i SYNC fino a hop 2</td><td>inoltri, dopo 50–300 ms casuali</td></tr>
+      <tr><td><span class="s">ORFANO</span></td><td>non sente l'orologio da 3 s: continua a suonare sul proprio <code>t0</code> (la deriva in pochi secondi è sotto il millisecondo) e aspetta. <span class="nuovo">nuovo come stato</span></td><td>nulla di speciale</td></tr>
+    </tbody>
+  </table></div>
+  <p class="testo nota">La regola che risolve tutti i conflitti di questa regione è una sola: <b>vince l'id più basso</b>. Ogni dispositivo la applica da solo, guardando la propria tabella dei vicini, e tutti arrivano alla stessa conclusione senza votare né negoziare.</p>
+</section>
+
+<section id="voce">
+  <span class="occhiello">Dentro GRAZIA · regione 2</span>
+  <h2>La voce: autonoma e suonata</h2>
+  <p class="testo">La seconda regione è indipendente dall'orologio: un'origine può essere in mano a qualcuno, un orfano può suonare da solo. Descrive il par. 8.5.</p>
+  <div class="diagramma">
+<pre class="mermaid">
+stateDiagram-v2
+  direction LR
+  [*] --> AUTONOMA
+  AUTONOMA --> IN_MANO : presa in mano
+  IN_MANO --> IN_MANO : tap, nota quantizzata
+  IN_MANO --> RITORNO : posata, ferma 3 s
+  RITORNO --> AUTONOMA : dissolvenza 2 s
+  RITORNO --> IN_MANO : ripresa in mano
+</pre>
+  </div>
+  <div class="tab"><table>
+    <thead><tr><th>Stato</th><th>Cosa suona</th></tr></thead>
+    <tbody>
+      <tr><td><span class="s">AUTONOMA</span></td><td>la voce della specie: a ogni passo decide se suonare secondo il pattern di 16 passi e il ruolo (bordone, ritmo, melodia, eco); con probabilità <i>ascolto</i> imita la nota più recente di un vicino</td></tr>
+      <tr><td><span class="s">IN_MANO</span></td><td>la probabilità della voce autonoma scende di un fattore (1 − docilità); ogni tap suona sempre, sul passo più vicino (subito se è passato da meno di 40 ms, altrimenti al prossimo, al massimo 83 ms dopo). Flag "in mano" nell'annuncio</td></tr>
+      <tr><td><span class="s">RITORNO</span></td><td>la voce autonoma risale in 2 s di dissolvenza, così posare la creatura non produce un salto</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="aggancio">
+  <span class="occhiello">Dentro GRAZIA · regione 3</span>
+  <h2>L'aggancio del tempo</h2>
+  <p class="testo">La terza regione è interna all'orologio e vale per partecipanti e orfani. Ogni SYNC dà una stima di <code>t0</code>; lo <b>scarto</b> tra la stima e il <code>t0</code> attuale decide come correggere. Nel TestSincronia lo scarto mediano misurato è 0,03 ms.</p>
+  <div class="tab"><table>
+    <thead><tr><th>Stato</th><th>Quando</th><th>Cosa succede</th></tr></thead>
+    <tbody>
+      <tr><td><span class="s">AGGANCIATO</span></td><td>scarto sotto 1 ms</td><td>nessuna correzione percepibile</td></tr>
+      <tr><td><span class="s">IN_CORREZIONE</span></td><td>scarto tra 1 e 150 ms</td><td><code>t0</code> si sposta al massimo di 10 ms al secondo: nessuno salta, la musica scivola in fase</td></tr>
+      <tr><td><span class="s">SALTO</span></td><td>scarto oltre 150 ms (ingresso, migrazione, ritorno da un isolamento lungo)</td><td><code>t0</code> prende subito la stima. Un passo già suonato non si risuona mai; al massimo se ne salta uno</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="transizioni">
+  <span class="occhiello">Tabella completa</span>
+  <h2>Transizioni</h2>
+  <p class="testo">Ogni riga è una transizione: da quale stato, con quale evento, sotto quale guardia, con quale azione, verso quale stato. Gli id servono a citarle nei casi di eccezione.</p>
+  <div class="tab"><table>
+    <thead><tr><th>Id</th><th>Da</th><th>Evento</th><th>Guardia</th><th>Azione</th><th>A</th></tr></thead>
+    <tbody>
+      <tr class="gruppo"><td colspan="6">Accensione</td></tr>
+      <tr><td class="id">A1</td><td><span class="s">AVVIO</span></td><td>accensione</td><td>in memoria non risulta una sessione in corso</td><td>vita normale</td><td><span class="s">FUORI</span></td></tr>
+      <tr><td class="id">A2</td><td><span class="s">AVVIO</span></td><td>accensione</td><td>in memoria risulta la sessione <i>s</i> e lo spegnimento è avvenuto da meno di 3 min</td><td>avvia il timer di recupero</td><td><span class="s">RECUPERO</span></td></tr>
+      <tr><td class="id">A3</td><td><span class="s">RECUPERO</span></td><td>SYNC di <i>s</i></td><td>—</td><td>entra direttamente, <code>t0</code> dal SYNC</td><td><span class="s">PARTECIPANTE</span></td></tr>
+      <tr><td class="id">A4</td><td><span class="s">RECUPERO</span></td><td>silenzio 6 s, o SYNC di un'altra sessione</td><td>—</td><td>ripristina lo stato di vita salvato; un SYNC diverso viene trattato come in F2</td><td><span class="s">FUORI</span></td></tr>
+
+      <tr class="gruppo"><td colspan="6">Fuori dalla grazia</td></tr>
+      <tr><td class="id">F1</td><td><span class="s">FUORI</span></td><td>innesco della specie (gesto o condizione interna)</td><td>nessuna sessione udibile negli ultimi 3 s</td><td>sessione casuale, <code>t0</code> = adesso, primo SYNC subito (vale da invito)</td><td><span class="s">ORIGINE</span></td></tr>
+      <tr><td class="id">F1b</td><td><span class="s">FUORI</span></td><td>innesco della specie o tocco</td><td>una sessione è udibile</td><td>entra in quella, con l'ultimo SYNC sentito, senza prontezza né quorum</td><td><span class="s">PARTECIPANTE</span></td></tr>
+      <tr><td class="id">F2</td><td><span class="s">FUORI</span></td><td>SYNC</td><td>sessione non chiusa per me, hop fino a 2, durata residua almeno 10 s <span class="nuovo">nuovo</span>, la creatura è sveglia</td><td>ricorda il SYNC, avvia la prontezza</td><td><span class="s">INVITATO</span></td></tr>
+      <tr><td class="id">F3</td><td><span class="s">FUORI</span></td><td>SYNC</td><td>come F2, ma la creatura dorme e la specie non consente di entrare</td><td>segue l'orologio per il battito in sussurro</td><td><span class="s">SPETTATORE</span></td></tr>
+      <tr><td class="id">F4</td><td><span class="s">INVITATO</span></td><td>prontezza scaduta</td><td>quorum soddisfatto: almeno <i>q</i> annunci con il flag di questa sessione</td><td>entrata in UNISONO (livello 1), <code>t0</code> dall'ultimo SYNC</td><td><span class="s">PARTECIPANTE</span></td></tr>
+      <tr><td class="id">F5</td><td><span class="s">INVITATO</span></td><td>prontezza scaduta</td><td>quorum non soddisfatto</td><td>riprova al prossimo SYNC</td><td><span class="s">INVITATO</span></td></tr>
+      <tr><td class="id">F6</td><td><span class="s">INVITATO</span></td><td>SYNC di un'altra sessione</td><td>la sua origine ha un id più basso</td><td>sostituisce l'invito, la prontezza continua</td><td><span class="s">INVITATO</span></td></tr>
+      <tr><td class="id">F7</td><td><span class="s">INVITATO</span></td><td>nessun SYNC da 6 s, oppure FINE</td><td>—</td><td>dimentica l'invito</td><td><span class="s">FUORI</span></td></tr>
+      <tr><td class="id">F8</td><td><span class="s">SPETTATORE</span></td><td>si sveglia</td><td>la sessione è ancora udibile</td><td>avvia la prontezza</td><td><span class="s">INVITATO</span></td></tr>
+      <tr><td class="id">F9</td><td><span class="s">SPETTATORE</span></td><td>FINE, o silenzio 6 s</td><td>—</td><td>smette di pulsare</td><td><span class="s">FUORI</span></td></tr>
+
+      <tr class="gruppo"><td colspan="6">Dentro la grazia: orologio</td></tr>
+      <tr><td class="id">G1</td><td><span class="s">ORIGINE</span></td><td>sono passati 2 s dall'ultimo SYNC</td><td>—</td><td>manda SYNC con il tempo trascorso</td><td><span class="s">ORIGINE</span></td></tr>
+      <tr><td class="id">G2</td><td><span class="s">PARTECIPANTE</span></td><td>SYNC della mia sessione</td><td>—</td><td>stima <code>t0</code>, corregge (regione 3), programma l'inoltro se hop &lt; 2</td><td><span class="s">PARTECIPANTE</span></td></tr>
+      <tr><td class="id">G3</td><td><span class="s">PARTECIPANTE</span></td><td>nessun SYNC da 3 s</td><td>—</td><td>continua sul proprio <code>t0</code></td><td><span class="s">ORFANO</span></td></tr>
+      <tr><td class="id">G4</td><td><span class="s">ORFANO</span></td><td>SYNC della mia sessione</td><td>—</td><td>come G2; l'origine può essere cambiata</td><td><span class="s">PARTECIPANTE</span></td></tr>
+      <tr><td class="id">G5</td><td><span class="s">ORFANO</span></td><td>nessun SYNC da 6 s</td><td>nessun vicino vivo della sessione ha un id più basso del mio</td><td>stessa sessione, stesso <code>t0</code>, SYNC subito</td><td><span class="s">ORIGINE</span></td></tr>
+      <tr><td class="id">G6</td><td><span class="s">ORFANO</span></td><td>nessun SYNC da 15 s</td><td>nessuno ha preso l'orologio</td><td>scioglimento locale, sessione <b>non</b> segnata come chiusa</td><td><span class="s">USCENDO</span></td></tr>
+      <tr><td class="id">G7</td><td><span class="s">ORIGINE</span></td><td>SYNC della mia sessione da un'altra origine</td><td>la sua origine ha un id più basso del mio</td><td>cede l'orologio (doppia elezione)</td><td><span class="s">PARTECIPANTE</span></td></tr>
+      <tr><td class="id">G8</td><td>qualsiasi in GRAZIA</td><td>SYNC di un'altra sessione</td><td>la sua origine ha un id più basso della mia origine</td><td>migra: nuova sessione, nuovo <code>t0</code> (salto di fase)</td><td><span class="s">PARTECIPANTE</span></td></tr>
+      <tr><td class="id">G9</td><td><span class="s">ORIGINE</span></td><td>meno di un altro partecipante visibile per 10 s</td><td>—</td><td>manda FINE con motivo 3 (scioglimento)</td><td><span class="s">USCENDO</span></td></tr>
+
+      <tr class="gruppo"><td colspan="6">Uscita</td></tr>
+      <tr><td class="id">U1</td><td>qualsiasi in GRAZIA</td><td>il tempo trascorso raggiunge la durata</td><td>durata diversa da 0</td><td>l'origine manda FINE con motivo 1; tutti escono da soli allo stesso passo, anche senza sentire il FINE</td><td><span class="s">USCENDO</span></td></tr>
+      <tr><td class="id">U2</td><td>qualsiasi in GRAZIA</td><td>FINE della mia sessione</td><td>—</td><td>inoltra il FINE una volta, segna la sessione come chiusa</td><td><span class="s">USCENDO</span></td></tr>
+      <tr><td class="id">U3</td><td><span class="s">ORIGINE</span></td><td>gesto di chiusura</td><td>la specie permette all'origine di chiudere per tutti</td><td>FINE tre volte, motivo 2</td><td><span class="s">USCENDO</span></td></tr>
+      <tr><td class="id">U4</td><td><span class="s">PARTECIPANTE</span> o <span class="s">ORFANO</span></td><td>gesto di uscita individuale (capovolta, nella specie neutra)</td><td>la specie lo permette</td><td>segna la sessione come chiusa per me</td><td><span class="s">USCENDO</span></td></tr>
+      <tr><td class="id">U5</td><td><span class="s">ORIGINE</span></td><td>gesto di uscita individuale</td><td>la specie lo permette</td><td>smette di mandare SYNC senza FINE: gli altri eleggono dopo 6 s (vedi <a href="#decisioni">decisione 2</a>)</td><td><span class="s">USCENDO</span></td></tr>
+      <tr><td class="id">U6</td><td>qualsiasi in GRAZIA</td><td>batteria critica</td><td>—</td><td>come U4 o U5, senza dissolvenza lunga</td><td><span class="s">USCENDO</span></td></tr>
+      <tr><td class="id">U7</td><td><span class="s">USCENDO</span></td><td>fine della battuta in corso (al massimo 2 s)</td><td>—</td><td>uscita da UNISONO (livello 1): ripristina lo stato salvato</td><td><span class="s">RIPOSO</span></td></tr>
+      <tr><td class="id">U8</td><td><span class="s">RIPOSO</span></td><td>sono passati 30 s</td><td>—</td><td>—</td><td><span class="s">FUORI</span></td></tr>
+      <tr><td class="id">U9</td><td><span class="s">RIPOSO</span></td><td>SYNC della sessione appena lasciata</td><td>l'uscita era involontaria (G6, G9) e la sessione non è chiusa per me</td><td>rientra, salto di fase</td><td><span class="s">PARTECIPANTE</span></td></tr>
+      <tr><td class="id">U10</td><td><span class="s">RIPOSO</span></td><td>tocco o gesto di rientro</td><td>la sessione appena lasciata è udibile</td><td>dimentica la chiusura, rientra con l'ultimo SYNC</td><td><span class="s">PARTECIPANTE</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="timer">
+  <span class="occhiello">Parametri</span>
+  <h2>Timer e soglie</h2>
+  <div class="tab"><table>
+    <thead><tr><th>Nome</th><th>Valore</th><th>Fa scattare</th><th>Fonte</th></tr></thead>
+    <tbody>
+      <tr><td>intervallo SYNC</td><td class="v">2 s</td><td>G1</td><td>Appendice A</td></tr>
+      <tr><td>ritardo d'inoltro</td><td class="v">50–300 ms</td><td>inoltro in G2</td><td>Appendice A</td></tr>
+      <tr><td>orfano</td><td class="v">3 s</td><td>G3</td><td><span class="nuovo">nuovo</span> un SYNC e mezzo perso</td></tr>
+      <tr><td>elezione</td><td class="v">6 s</td><td>G5</td><td>Appendice A</td></tr>
+      <tr><td>silenzio totale</td><td class="v">15 s</td><td>G6</td><td>TestSincronia <span class="nuovo">nuovo</span></td></tr>
+      <tr><td>solitudine (scioglimento)</td><td class="v">10 s</td><td>G9</td><td>Appendice A</td></tr>
+      <tr><td>durata della sessione</td><td class="v">180 s</td><td>U1</td><td>Appendice A</td></tr>
+      <tr><td>durata residua minima per entrare</td><td class="v">10 s</td><td>guardia di F2</td><td><span class="nuovo">nuovo</span></td></tr>
+      <tr><td>prontezza</td><td class="v">0–10 s</td><td>F4, F5</td><td>Appendice A, tratto di carattere</td></tr>
+      <tr><td>quorum</td><td class="v">0–4</td><td>guardia di F4</td><td>Appendice A, tratto di carattere</td></tr>
+      <tr><td>invito caduto</td><td class="v">6 s</td><td>F7</td><td><span class="nuovo">nuovo</span> uguale all'elezione</td></tr>
+      <tr><td>dissolvenza d'uscita</td><td class="v">fine battuta, max 2 s</td><td>U7</td><td><span class="nuovo">nuovo</span></td></tr>
+      <tr><td>riposo tra sessioni</td><td class="v">30 s</td><td>U8</td><td>Appendice A</td></tr>
+      <tr><td>finestra di recupero dopo riavvio</td><td class="v">6 s</td><td>A3, A4</td><td><span class="nuovo">nuovo</span></td></tr>
+      <tr><td>fine di "in mano"</td><td class="v">ferma 3 s</td><td>regione voce</td><td>Appendice A, sensi</td></tr>
+      <tr><td>dissolvenza mano → voce</td><td class="v">2 s</td><td>regione voce</td><td>Appendice A</td></tr>
+      <tr><td>correzione massima</td><td class="v">10 ms/s</td><td>regione 3</td><td>Appendice A</td></tr>
+      <tr><td>soglia di salto</td><td class="v">150 ms</td><td>regione 3</td><td>TestSincronia <span class="nuovo">nuovo</span></td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section id="eccezioni">
+  <span class="occhiello">Quando qualcosa va storto</span>
+  <h2>Eccezioni e recupero</h2>
+  <p class="testo">Per ogni caso: cosa succede nella stanza, cosa vede il singolo dispositivo, quali transizioni scattano e come finisce. I casi marcati in arancio hanno un rischio residuo.</p>
+  <div class="casi">
+    <div class="caso">
+      <h3>1 · L'origine si spegne o viene portata via</h3>
+      <dl><dt>Cosa vede</dt><dd>i partecipanti smettono di ricevere SYNC</dd>
+      <dt>Transizioni</dt><dd>G3 a 3 s (tutti orfani, la musica continua); G5 a 6 s per l'id più basso; G4 per gli altri al primo SYNC del nuovo orologio</dd>
+      <dt>Esito</dt><dd>nessuna nota persa e nessun salto: stessa sessione, stesso <code>t0</code>. Verificato nel test: dopo il cambio di origine, scarto entro 1 ms</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>2 · Un partecipante perde la radio per pochi secondi</h3>
+      <dl><dt>Cosa vede</dt><dd>nessun SYNC per meno di 6 s</dd>
+      <dt>Transizioni</dt><dd>G3, poi G4 al ritorno</dd>
+      <dt>Esito</dt><dd>al ritorno lo scarto è di pochi decimi di ms: correzione lisciata, impercettibile</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>3 · Un partecipante sente gli altri ma non l'origine</h3>
+      <dl><dt>Cosa vede</dt><dd>SYNC con hop 1 o 2, inoltrati da un vicino</dd>
+      <dt>Transizioni</dt><dd>G2 normale: l'hop non cambia lo stato</dd>
+      <dt>Esito</dt><dd>resta agganciato. Nel test: SYNC via un altro dispositivo ogni 2 s, scarto entro 1 ms</dd></dl>
+    </div>
+    <div class="caso rischio">
+      <h3>4 · Un partecipante resta isolato a lungo</h3>
+      <dl><dt>Cosa vede</dt><dd>nessun pacchetto da nessuno</dd>
+      <dt>Transizioni</dt><dd>G3 a 3 s; a 6 s G5, perché non vede nessun id più basso, e diventa origine di una sessione in cui è solo; G9 a 16 s lo scioglie; U7 lo porta in RIPOSO</dd>
+      <dt>Recupero</dt><dd>se torna in portata entro 30 s: U9, rientro nella stessa sessione. Dopo: F2 come un invito qualsiasi</dd>
+      <dt>Rischio</dt><dd>per una decina di secondi suona da solo, fuori dal gruppo. Il TestSincronia oggi non ha G9 e continua da solo all'infinito</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>5 · Due creature aprono una sessione nello stesso momento</h3>
+      <dl><dt>Cosa vede</dt><dd>SYNC di due sessioni diverse</dd>
+      <dt>Transizioni</dt><dd>G8 per chi segue l'origine con l'id più alto; G7 o G8 per quell'origine stessa</dd>
+      <dt>Esito</dt><dd>in un SYNC la stanza converge sulla sessione dell'id più basso. Chi migra fa un salto di fase una volta sola. Verificato nel test</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>6 · Doppia elezione</h3>
+      <dl><dt>Cosa vede</dt><dd>due orfani con tabelle dei vicini diverse si credono entrambi i più bassi e mandano SYNC della stessa sessione</dd>
+      <dt>Transizioni</dt><dd>G7: l'id più alto cede</dd>
+      <dt>Esito</dt><dd>stessa sessione e <code>t0</code> quasi identico: nessun salto udibile. Verificato nel test (origine isolata che torna)</dd></dl>
+    </div>
+    <div class="caso rischio">
+      <h3>7 · Il FINE non arriva a tutti</h3>
+      <dl><dt>Cosa vede</dt><dd>alcuni partecipanti perdono tutte e tre le copie del FINE e i suoi inoltri</dd>
+      <dt>Transizioni</dt><dd>se la sessione aveva una durata: U1 li chiude comunque, alla scadenza. Se il FINE era manuale: G3, poi G5, e chi non l'ha sentito <b>continua una sessione che gli altri hanno chiuso</b></dd>
+      <dt>Recupero</dt><dd>proposta <span class="nuovo">nuovo</span>: chi ha ricevuto un FINE e sente ancora un SYNC di quella sessione risponde con un FINE, al massimo una volta ogni 2 s. La fine si propaga come un contagio finché la sessione fantasma non tace</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>8 · Una creatura si riavvia a sessione in corso</h3>
+      <dl><dt>Cosa vede</dt><dd>all'accensione la memoria dice "ero in grazia nella sessione <i>s</i>"</dd>
+      <dt>Transizioni</dt><dd>A2, poi A3 se la sessione esiste ancora, altrimenti A4</dd>
+      <dt>Esito</dt><dd>rientra in circa 2 s senza aspettare prontezza e quorum. Verificato nel test: rientro 2 s dopo l'accensione</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>9 · La creatura dorme quando arriva l'invito</h3>
+      <dl><dt>Transizioni</dt><dd>F3 se la specie non la fa entrare: pulsa col battito senza partecipare; F8 se si sveglia mentre la sessione è ancora in corso</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>10 · Batteria critica durante la grazia</h3>
+      <dl><dt>Transizioni</dt><dd>U6: esce senza dissolvenza lunga. Se era l'origine non manda FINE: gli altri continuano ed eleggono una nuova origine (caso 1)</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>11 · Un grande salto d'orologio</h3>
+      <dl><dt>Cosa vede</dt><dd>scarto oltre 150 ms (ingresso, migrazione, ritorno da un isolamento lungo)</dd>
+      <dt>Transizioni</dt><dd>regione 3 in SALTO</dd>
+      <dt>Esito</dt><dd>si riallinea subito; un passo può saltare, nessun passo viene ripetuto</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>12 · Invito a sessione quasi finita</h3>
+      <dl><dt>Transizioni</dt><dd>la guardia di F2 non passa se mancano meno di 10 s alla fine: la creatura non entra per uscire subito</dd></dl>
+    </div>
+    <div class="caso rischio">
+      <h3>13 · Due dispositivi con lo stesso id</h3>
+      <dl><dt>Cosa vede</dt><dd>annunci con il proprio id da un altro MAC</dd>
+      <dt>Esito</dt><dd>le elezioni e i duplicati diventano ambigui: un dispositivo può scartare i pacchetti dell'altro. Si segnala a schermo; si risolve solo con la tabella di flotta (<code>flotta.h</code>)</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>14 · Radio affollata</h3>
+      <dl><dt>Esito</dt><dd>nessuna transizione dipende da un singolo pacchetto: un SYNC perso costa al massimo qualche decimo di ms di deriva, una nota persa è una nota persa. Solo l'ingresso richiede almeno un SYNC ricevuto</dd></dl>
+    </div>
+    <div class="caso">
+      <h3>15 · Uscita volontaria e ripensamento</h3>
+      <dl><dt>Transizioni</dt><dd>U4 segna la sessione come chiusa: gli inviti di quella sessione vengono ignorati. Il gesto di rientro (U10, o F1b dopo il riposo) cancella la chiusura e rientra subito. Verificato nel test</dd></dl>
+    </div>
+  </div>
+</section>
+
+<section id="invarianti">
+  <span class="occhiello">Sempre vere</span>
+  <h2>Invarianti</h2>
+  <p class="testo">Regole che nessuna sequenza di eventi deve violare. Sono il criterio per scrivere i test: se un test trova un momento in cui una di queste è falsa, c'è un bug.</p>
+  <ol class="regole">
+    <li>Un dispositivo appartiene al massimo a una sessione alla volta.</li>
+    <li>I bisogni sono congelati se e solo se la creatura è in <span class="s g">GRAZIA</span> o in <span class="s">USCENDO</span>.</li>
+    <li>Il flag "in unisono" dell'annuncio è alzato se e solo se la creatura è in <span class="s g">GRAZIA</span> o in <span class="s">USCENDO</span>, e porta il numero di sessione giusto.</li>
+    <li>Solo un'<span class="s">ORIGINE</span> crea SYNC nuovi, al massimo uno ogni 2 s; gli altri li inoltrano soltanto.</li>
+    <li>In una sessione stabile, dopo al massimo un intervallo di SYNC resta una sola origine.</li>
+    <li>Un passo già suonato non viene mai suonato una seconda volta, qualunque correzione subisca <code>t0</code>.</li>
+    <li>All'uscita la creatura torna esattamente nello stato di vita in cui era entrata, con gli stessi valori.</li>
+    <li>Una sessione segnata come chiusa non viene mai riaperta da un invito: solo da un gesto della creatura.</li>
+    <li>Un FINE agisce solo sulla sessione che nomina.</li>
+    <li>Nessun messaggio ricevuto provoca più di una trasmissione (un inoltro), salvo il FINE contagioso proposto nel caso 7, che ha un suo limite.</li>
+  </ol>
+</section>
+
+<section id="decisioni">
+  <span class="occhiello">Da decidere</span>
+  <h2>Decisioni aperte</h2>
+  <ol class="regole">
+    <li><b>Malattia e grazia.</b> La priorità del par. 4.3 (MALATO sopra UNISONO) contraddice la regola "si entra da qualsiasi stato tranne MORTO". Proposta: una creatura malata può entrare. I bisogni sono congelati, quindi la grazia non la fa peggiorare, ed è coerente con l'idea dell'unisono come luogo in cui le differenze di stato si sospendono.</li>
+    <li><b>Uscita individuale dell'origine.</b> Oggi l'origine che esce da sola lascia 6 s di orfani prima dell'elezione: la musica continua, ma l'orologio non viene corretto. In alternativa si aggiunge al FINE un motivo 4, "passo l'orologio", che fa eleggere subito l'id più basso.</li>
+    <li><b>Il riposo blocca anche gli inviti?</b> Proposta: il riposo vieta di aprire e di accettare sessioni nuove, ma permette di rientrare in quella lasciata per caso (U9) o per scelta revocata (U10).</li>
+    <li><b>Spavento in grazia.</b> Le scosse sono gesti dello strumento. Proposta: in grazia lo spavento è sospeso e la scossa forte è solo un gesto musicale, anche perché SPAVENTATO ha una priorità più bassa di UNISONO.</li>
+    <li><b>FINE contagioso</b> (caso 7): da aggiungere alla piattaforma?</li>
+    <li><b>Nuovi parametri</b> proposti in questa pagina: orfano 3 s, silenzio totale 15 s, durata residua minima 10 s, finestra di recupero 6 s, dissolvenza d'uscita, soglia di salto 150 ms. Da aggiungere all'Appendice A se approvati.</li>
+    <li><b>Uscita tutta insieme o una alla volta.</b> Il par. 8.3 lascia la scelta alla specie: in questa macchina si traduce nella durata di <span class="s">USCENDO</span>. "Tutta insieme" significa uscire a fine battuta; "una alla volta" significa una durata casuale per creatura.</li>
+  </ol>
+</section>
+
+<section id="test">
+  <span class="occhiello">Confronto col codice</span>
+  <h2>Stato nel TestSincronia</h2>
+  <p class="testo">Lo sketch <code>code/arduino/TestSincronia</code> realizza la regione 1 e parte dell'uscita. Questo è ciò che c'è e ciò che manca rispetto alla macchina descritta qui.</p>
+  <div class="stato-test">
+    <div class="si"><h3>Realizzato e verificato</h3><ul>
+      <li>ORIGINE e PARTECIPANTE, con SYNC ogni 2 s (G1, G2)</li>
+      <li>elezione dopo 6 s per l'id più basso (G5)</li>
+      <li>doppia elezione e migrazione verso l'id più basso (G7, G8)</li>
+      <li>inoltro fino a hop 2</li>
+      <li>correzione lisciata e salto oltre 150 ms (regione 3)</li>
+      <li>uscita per silenzio dopo 15 s, recuperabile (G6)</li>
+      <li>FINE inviato tre volte e inoltrato (U2, U3)</li>
+      <li>uscita individuale e rientro col tocco (U4, F1b)</li>
+      <li>rientro dopo riavvio, ma solo come invito qualsiasi</li>
+    </ul></div>
+    <div class="no"><h3>Non ancora presente</h3><ul>
+      <li>il livello creatura: stati di vita, congelamento, ritorno allo stato salvato</li>
+      <li>INVITATO con prontezza e quorum (oggi si entra subito)</li>
+      <li>SPETTATORE, USCENDO, RIPOSO, RECUPERO</li>
+      <li>ORFANO come stato esplicito (oggi è implicito)</li>
+      <li>durata della sessione (U1) e scioglimento per solitudine (G9)</li>
+      <li>la regione della voce (autonoma, in mano, ritorno)</li>
+      <li>FINE contagioso</li>
+    </ul></div>
+  </div>
+</section>
+
+</main>

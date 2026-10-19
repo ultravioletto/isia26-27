@@ -1,0 +1,1027 @@
+<meta charset="utf-8">
+<title>Simulatore di vita della creatura</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&family=Schibsted+Grotesk:wght@600;700&display=swap">
+<style>
+/* Layout: strumento da proiettare in aula. In alto comandi e carta pescata, poi grafico di vita con striscia degli stati, diario dei turni, confronto dei tre mazzi, parametri. Stessa famiglia visiva di unisono-stati.html */
+:root {
+  --bg: #f4f5f7;
+  --surface: #ffffff;
+  --fg: #16181d;
+  --muted: #5a6170;
+  --line: #d8dce3;
+  --grid: #e7e9ee;
+  --accent: #2f4ea8;
+  --accent-soft: #e3e8f6;
+
+  /* i quattro bisogni */
+  --nutr: #eb6834;
+  --ener: #2a78d6;
+  --umore: #1baf7a;
+  --soc: #6250d6;
+
+  /* gli stati: il colore lega lo stato al bisogno che lo causa */
+  --st-sveglio: #dfe2e8;  --on-sveglio: #16181d;
+  --st-dorme: #2a78d6;    --on-dorme: #ffffff;
+  --st-affamato: #eb6834; --on-affamato: #ffffff;
+  --st-giocoso: #1baf7a;  --on-giocoso: #0d2a1e;
+  --st-annoiato: #eda100; --on-annoiato: #2b1d00;
+  --st-spaventato: #e34948; --on-spaventato: #ffffff;
+  --st-malato: #e87ba4;   --on-malato: #3a0f20;
+  --st-morto: #16181d;    --on-morto: #ffffff;
+  --st-proprio: #0e8f9a;  --on-proprio: #ffffff; /* della specie: nessun bisogno lo causa */
+
+  --display: "Schibsted Grotesk", "Helvetica Neue", Arial, sans-serif;
+  --body: "IBM Plex Sans", "Segoe UI", Roboto, sans-serif;
+  --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #101216; --surface: #171a20; --fg: #e6e8ed; --muted: #9aa1ae; --line: #2a2f38; --grid: #22262e;
+    --accent: #8fa6ec; --accent-soft: #1e2640;
+    --nutr: #d95926; --ener: #3987e5; --umore: #199e70; --soc: #9085e9;
+    --st-sveglio: #2c313b; --on-sveglio: #e6e8ed;
+    --st-dorme: #3987e5; --on-dorme: #ffffff;
+    --st-affamato: #d95926; --on-affamato: #ffffff;
+    --st-giocoso: #199e70; --on-giocoso: #ffffff;
+    --st-annoiato: #c98500; --on-annoiato: #1a1200;
+    --st-spaventato: #e66767; --on-spaventato: #1a0606;
+    --st-malato: #d55181; --on-malato: #ffffff;
+    --st-morto: #e6e8ed; --on-morto: #101216;
+    --st-proprio: #2bb3be; --on-proprio: #06272a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #101216; --surface: #171a20; --fg: #e6e8ed; --muted: #9aa1ae; --line: #2a2f38; --grid: #22262e;
+  --accent: #8fa6ec; --accent-soft: #1e2640;
+  --nutr: #d95926; --ener: #3987e5; --umore: #199e70; --soc: #9085e9;
+  --st-sveglio: #2c313b; --on-sveglio: #e6e8ed;
+  --st-dorme: #3987e5; --on-dorme: #ffffff;
+  --st-affamato: #d95926; --on-affamato: #ffffff;
+  --st-giocoso: #199e70; --on-giocoso: #ffffff;
+  --st-annoiato: #c98500; --on-annoiato: #1a1200;
+  --st-spaventato: #e66767; --on-spaventato: #1a0606;
+  --st-malato: #d55181; --on-malato: #ffffff;
+  --st-morto: #e6e8ed; --on-morto: #101216;
+  --st-proprio: #2bb3be; --on-proprio: #06272a;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body {
+  background: var(--bg); color: var(--fg);
+  font: 15px/1.55 var(--body);
+  padding-left: max(16px, env(safe-area-inset-left, 0px));
+  padding-right: max(16px, env(safe-area-inset-right, 0px));
+  padding-block: 32px 72px;
+}
+.pagina { max-width: 1120px; margin: 0 auto; display: grid; gap: 40px; }
+h1, h2, h3 { font-family: var(--display); text-wrap: balance; line-height: 1.15; margin: 0; }
+h1 { font-size: clamp(1.8rem, 4.5vw, 2.6rem); letter-spacing: -0.01em; }
+h2 { font-size: 1.35rem; }
+h3 { font-size: 1rem; }
+p { margin: 0; }
+section { display: grid; gap: 16px; min-width: 0; }
+.occhiello { font: 500 0.72rem/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); }
+.sotto { color: var(--muted); max-width: 72ch; }
+.m { font-family: var(--mono); font-size: 0.9em; }
+header { display: grid; gap: 12px; }
+
+/* comandi */
+.comandi { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: end; }
+.campo { display: grid; gap: 4px; }
+.campo label, .etichetta { font: 500 0.7rem/1.2 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+select, input[type="text"], input[type="number"] {
+  font: 400 0.95rem/1.2 var(--body); color: var(--fg); background: var(--surface);
+  border: 1px solid var(--line); border-radius: 6px; padding: 7px 9px; min-height: 36px;
+}
+input[type="number"] { width: 5.2em; font-family: var(--mono); font-variant-numeric: tabular-nums; }
+#seme { width: 8em; font-family: var(--mono); }
+.check { display: flex; gap: 8px; align-items: center; min-height: 36px; font-size: 0.92rem; }
+.bottoni { display: flex; flex-wrap: wrap; gap: 8px; }
+button {
+  font: 500 0.9rem/1 var(--body); min-height: 36px; padding: 0 14px; border-radius: 6px; cursor: pointer;
+  border: 1px solid var(--line); background: var(--surface); color: var(--fg);
+}
+button.primario { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+button:hover { border-color: var(--accent); }
+button:disabled { opacity: 0.45; cursor: default; }
+button:focus-visible, select:focus-visible, input:focus-visible, summary:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+/* turno corrente */
+.quadro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(240px, 300px); gap: 16px; align-items: start; }
+@media (max-width: 820px) { .quadro { grid-template-columns: 1fr; } }
+.pannello { background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 16px; min-width: 0; }
+.grafico { position: relative; display: grid; gap: 6px; }
+.grafico svg { display: block; width: 100%; height: auto; overflow: visible; }
+.legenda { display: flex; flex-wrap: wrap; gap: 6px 16px; font-size: 0.85rem; color: var(--muted); }
+.legenda span { display: inline-flex; align-items: center; gap: 6px; }
+.legenda i { width: 14px; height: 3px; border-radius: 2px; display: inline-block; }
+.legenda i.tratt { height: 0; border-top: 2px dashed var(--muted); background: none; }
+.tip {
+  position: absolute; pointer-events: none; background: var(--surface); border: 1px solid var(--line);
+  border-radius: 6px; padding: 8px 10px; font-size: 0.82rem; box-shadow: 0 4px 14px rgb(0 0 0 / 0.12);
+  display: grid; gap: 2px; min-width: 150px; z-index: 2;
+}
+.tip b { font-family: var(--mono); font-weight: 500; }
+.tip .r { display: flex; justify-content: space-between; gap: 12px; font-variant-numeric: tabular-nums; }
+.tip .r span:first-child { display: inline-flex; align-items: center; gap: 6px; color: var(--muted); }
+.tip .r i { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+
+.carta { display: grid; gap: 10px; }
+.carta .ora { font: 500 0.8rem/1 var(--mono); color: var(--muted); font-variant-numeric: tabular-nums; }
+.carta .nome { font: 700 1.6rem/1.1 var(--display); }
+.carta .effetto { color: var(--muted); font-size: 0.92rem; }
+.carta .perche { font-size: 0.9rem; border-left: 3px solid var(--accent); padding-left: 10px; }
+.misure { display: grid; grid-template-columns: auto 1fr auto; gap: 6px 10px; align-items: center; font-size: 0.88rem; }
+.misure .barra { height: 8px; background: var(--grid); border-radius: 4px; overflow: hidden; }
+.misure .barra div { height: 100%; border-radius: 4px; transition: width 0.25s; }
+.misure .v { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; min-width: 2.5em; }
+
+.pill {
+  display: inline-block; font: 500 0.75rem/1 var(--mono); letter-spacing: 0.04em;
+  padding: 4px 7px; border-radius: 4px; white-space: nowrap;
+}
+.pill.grande { font-size: 0.95rem; padding: 6px 10px; justify-self: start; }
+
+/* riassunto */
+.riassunto { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; font-size: 0.9rem; }
+.riassunto .n { font-family: var(--mono); font-variant-numeric: tabular-nums; color: var(--muted); }
+.avviso { color: var(--muted); font-size: 0.9rem; }
+
+/* diario */
+.tab { overflow: auto; max-height: 420px; border: 1px solid var(--line); border-radius: 8px; background: var(--surface); }
+table { border-collapse: collapse; width: 100%; font-size: 0.86rem; }
+th, td { text-align: left; padding: 6px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { position: sticky; top: 0; background: var(--bg); font: 500 0.68rem/1.3 var(--mono); letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); z-index: 1; }
+td.v { font-family: var(--mono); font-variant-numeric: tabular-nums; text-align: right; }
+td.v.basso { color: var(--st-spaventato); font-weight: 500; }
+td.ora { font-family: var(--mono); color: var(--muted); white-space: nowrap; }
+td.perche { color: var(--muted); min-width: 16em; }
+tr.attuale td { background: var(--accent-soft); }
+.testa-diario { display: flex; flex-wrap: wrap; justify-content: space-between; align-items: end; gap: 10px; }
+
+/* confronto */
+.tre { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+@media (max-width: 820px) { .tre { grid-template-columns: 1fr; } }
+.tre .pannello { display: grid; gap: 8px; }
+.tre svg { width: 100%; height: auto; display: block; }
+.tre .esito { font-size: 0.85rem; color: var(--muted); }
+
+/* parametri */
+details.pannello summary { cursor: pointer; font: 600 1rem/1.3 var(--display); }
+.gruppi { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 18px 24px; margin-top: 16px; }
+.gruppo { display: grid; gap: 6px; align-content: start; }
+.gruppo h3 { font-size: 0.9rem; margin-bottom: 2px; }
+.param { display: flex; justify-content: space-between; align-items: center; gap: 10px; font-size: 0.88rem; }
+.param.mod label { color: var(--accent); font-weight: 600; }
+.azioni-param { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 18px; align-items: center; }
+
+/* stato proprio */
+.prop { display: grid; gap: 14px; }
+.testa-prop { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; }
+#propNome { width: 11em; font-family: var(--mono); text-transform: uppercase; }
+.riga-prop { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; font-size: 0.92rem; }
+.riga-prop > .etichetta { flex: 0 0 12em; }
+.clausola { display: inline-flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.clausola select:first-child { max-width: 15em; }
+input.k { width: 4.6em; }
+.prop.spento .riga-prop { opacity: 0.5; }
+.avviso.limite { color: var(--fg); border-left: 3px solid var(--st-annoiato); padding-left: 10px; }
+@media (max-width: 560px) { .riga-prop > .etichetta { flex-basis: 100%; } }
+
+/* regole */
+.regole { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 400px), 1fr)); gap: 14px; }
+.regole ol, .regole ul { margin: 0; padding-left: 1.2em; display: grid; gap: 4px; font-size: 0.9rem; }
+
+@media (prefers-reduced-motion: reduce) { .misure .barra div { transition: none; } }
+</style>
+
+<main class="pagina">
+
+<header>
+  <span class="occhiello">Creature in rete · lezione 2 · la creatura nel tempo</span>
+  <h1>Simulatore di vita della creatura</h1>
+  <p class="sotto">La simulazione su carta del blocco A, in turni da 10 minuti. A ogni turno si pesca una carta, si applicano l'effetto e il decadimento, si aggiorna la salute e si controllano le transizioni in ordine di priorità. Con lo stesso seme e lo stesso mazzo tutti i portatili giocano la stessa partita.</p>
+</header>
+
+<section aria-label="Comandi">
+  <div class="comandi">
+    <div class="campo">
+      <label for="mazzo">Mazzo</label>
+      <select id="mazzo">
+        <option value="attenta">Attenta</option>
+        <option value="distratta" selected>Distratta</option>
+        <option value="assente">Assente</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="durata">Durata</label>
+      <select id="durata">
+        <option value="24">Mattina, 9–13 (24 turni)</option>
+        <option value="72">Giornata, 9–21 (72 turni)</option>
+        <option value="144">24 ore (144 turni)</option>
+      </select>
+    </div>
+    <div class="campo">
+      <label for="seme">Seme</label>
+      <input type="text" id="seme" value="isia" autocomplete="off" spellcheck="false">
+    </div>
+    <label class="check" for="isteresi"><input type="checkbox" id="isteresi" checked> Isteresi sulle soglie</label>
+    <div class="bottoni">
+      <button class="primario" id="pesca">Pesca un turno</button>
+      <button id="tutto">Gioca fino alla fine</button>
+      <button id="ricomincia">Ricomincia</button>
+      <button id="nuovoSeme">Nuovo seme</button>
+      <button id="rinasci" hidden>Rinascita</button>
+    </div>
+  </div>
+</section>
+
+<section class="quadro" aria-label="Grafico di vita e turno corrente">
+  <div class="pannello grafico" id="grafico">
+    <div class="legenda" aria-hidden="true">
+      <span><i style="background:var(--nutr)"></i>Nutrimento</span>
+      <span><i style="background:var(--ener)"></i>Energia</span>
+      <span><i style="background:var(--umore)"></i>Umore</span>
+      <span><i style="background:var(--soc)"></i>Socialità</span>
+      <span><i class="tratt"></i>Salute (nascosta)</span>
+    </div>
+    <svg id="svgVita" viewBox="0 0 800 270" role="img" aria-label="Andamento dei quattro bisogni e della salute nel tempo"></svg>
+    <svg id="svgStati" viewBox="0 0 800 34" role="img" aria-label="Stato della creatura a ogni turno"></svg>
+    <div class="tip" id="tip" hidden></div>
+  </div>
+  <div class="pannello carta" id="carta" aria-live="polite"></div>
+</section>
+
+<section aria-label="Riassunto">
+  <h2>Quanto tempo in ogni stato</h2>
+  <div class="riassunto" id="riassunto"></div>
+  <p class="avviso" id="avviso"></p>
+</section>
+
+<section aria-label="Diario dei turni">
+  <div class="testa-diario">
+    <h2>Diario dei turni</h2>
+    <button id="copia">Copia come CSV</button>
+  </div>
+  <div class="tab">
+    <table>
+      <thead><tr><th>Ora</th><th>Carta</th><th>Nutr.</th><th>Energia</th><th>Umore</th><th>Soc.</th><th>Salute</th><th>Stato</th><th>Perché</th></tr></thead>
+      <tbody id="diario"></tbody>
+    </table>
+  </div>
+</section>
+
+<section aria-label="Confronto dei tre mazzi">
+  <h2>Tre cure, stesso seme</h2>
+  <p class="sotto">La stessa creatura, con gli stessi parametri e lo stesso seme, curata da una persona attenta, distratta o assente. È la parete dei grafici del blocco B.</p>
+  <div class="tre" id="tre"></div>
+</section>
+
+<section aria-label="Stato proprio">
+  <h2>Lo stato proprio della specie</h2>
+  <p class="sotto">Il momento che nessun'altra creatura ha (§4.4 del documento di progetto). Il gruppo decide quando scatta, quando finisce e cosa fa ai bisogni; la piattaforma decide il resto: si entra solo da SVEGLIO, malattia e morte lo interrompono, uno spavento lo mette in pausa, e sonno, fame, gioco e noia aspettano la sua fine.</p>
+  <div class="pannello prop spento" id="prop">
+    <div class="testa-prop">
+      <label class="check" for="propAttivo"><input type="checkbox" id="propAttivo"> Attivo</label>
+      <div class="campo">
+        <label for="propNome">Nome</label>
+        <input type="text" id="propNome" value="proprio" maxlength="14" autocomplete="off" spellcheck="false">
+      </div>
+      <div class="bottoni" role="group" aria-label="Esempi">
+        <button id="esAssopita" title="L'anziana del §9.4: la sera, se è stanca, si assopisce">Esempio: assopita</button>
+        <button id="esSola" title="La timida del §9.4: senza vicini e senza cure, si chiude">Esempio: sola</button>
+      </div>
+    </div>
+    <div class="riga-prop">
+      <span class="etichetta">Entra da SVEGLIO se</span>
+      <span class="clausola" data-c="c1"></span>
+      <span>e</span>
+      <span class="clausola" data-c="c2"></span>
+    </div>
+    <div class="riga-prop">
+      <span class="etichetta">Esce se</span>
+      <span class="clausola" data-c="u"></span>
+      <span>oppure dopo</span>
+      <input type="number" id="propDurata" min="1" max="18" step="1" value="1" aria-label="Durata massima in turni">
+      <span>turni</span>
+    </div>
+    <div class="riga-prop">
+      <span class="etichetta">Non torna prima di</span>
+      <input type="number" id="propIntervallo" min="0" max="36" step="1" value="2" aria-label="Intervallo minimo in turni">
+      <span>turni dall'uscita</span>
+    </div>
+    <div class="riga-prop">
+      <span class="etichetta">Decadimento × durante</span>
+      <label for="kN">Nutrimento</label><input type="number" class="k" id="kN" min="0" max="2" step="0.25" value="1">
+      <label for="kE">Energia</label><input type="number" class="k" id="kE" min="0" max="2" step="0.25" value="1">
+      <label for="kU">Umore</label><input type="number" class="k" id="kU" min="0" max="2" step="0.25" value="1">
+      <label for="kS">Socialità da sola</label><input type="number" class="k" id="kS" min="0" max="2" step="0.25" value="1">
+    </div>
+    <p class="avviso" id="esitoProp"></p>
+    <p class="avviso limite" id="limiteProp" hidden></p>
+  </div>
+</section>
+
+<section aria-label="Parametri">
+  <details class="pannello" id="pannelloParam">
+    <summary>Parametri della specie (valori per turno da 10 minuti)</summary>
+    <div class="gruppi" id="gruppi"></div>
+    <div class="azioni-param">
+      <button id="neutra">Ripristina la neutra</button>
+      <button id="copiaParam">Copia i parametri modificati</button>
+      <span class="avviso" id="contaMod"></span>
+    </div>
+  </details>
+</section>
+
+<section aria-label="Regole">
+  <h2>Le regole del turno</h2>
+  <div class="regole">
+    <div class="pannello">
+      <h3>Ordine di un turno</h3>
+      <ol>
+        <li>Se la creatura chiede (è affamata, annoiata o malata, o un bisogno è sotto 40), chi cura lancia il dado. Se il dado basta, risponde al bisogno più basso: nutre, mette a dormire, gioca o accarezza, prende in mano.</li>
+        <li>Si pesca una carta dal mazzo: è il mondo intorno, e la cura spontanea. Si applicano gli effetti.</li>
+        <li>Si applica il decadimento dello stato in cui la creatura ha passato il turno (sveglia o nel sonno).</li>
+        <li>Salute: meno 10 per ogni bisogno sotto 15, più 10 se tutti sono sopra 50.</li>
+        <li>Si aggiornano le soglie con isteresi: fame, sonno, malattia.</li>
+        <li>Si sceglie lo stato in ordine di priorità: MORTO, MALATO, SPAVENTATO, PROPRIO, DORME, AFFAMATO, GIOCOSO, ANNOIATO, SVEGLIO.</li>
+      </ol>
+    </div>
+    <div class="pannello">
+      <h3>Casi particolari</h3>
+      <ul>
+        <li>Dado di chi cura: l'attenta risponde con 2 o più, la distratta con 3 o più, l'assente solo con 6.</li>
+        <li>Nel sonno non chiede, non mangia e non gioca: la carta è persa. La socialità cambia a metà velocità. Anche una creatura malata dorme, se ha sonno.</li>
+        <li>Una scossa forte sveglia chi dorme: meno 10 di umore, meno 5 per il risveglio forzato. Non spaventa una creatura malata.</li>
+        <li>Buio: si lancia il dado, con 4 o più si addormenta.</li>
+        <li>GIOCOSO solo se, al momento del gioco, umore è sopra 70 ed energia sopra 50.</li>
+        <li>ANNOIATO quando nel turno nessuno l'ha curata e l'umore è sotto 50.</li>
+        <li>Da MORTO si esce solo con la rinascita: bisogni a 70, salute 100, generazione più 1.</li>
+        <li>Stato proprio, se attivo: si entra solo da SVEGLIO, quando valgono le condizioni del gruppo e dopo l'intervallo minimo. Nei turni passati lì il decadimento da sveglia si moltiplica per i coefficienti del gruppo. Uno spavento lo mette in pausa per un turno; malattia e morte lo chiudono.</li>
+      </ul>
+    </div>
+    <div class="pannello">
+      <h3>Senza isteresi</h3>
+      <ul>
+        <li>Si entra e si esce alla stessa soglia: fame a 30, sonno a 25, malattia a 30.</li>
+        <li>Togliete la spunta e guardate la striscia degli stati: dove sfarfalla, manca l'isteresi.</li>
+      </ul>
+    </div>
+    <div class="pannello">
+      <h3>Differenze dal documento di progetto</h3>
+      <ul>
+        <li>I valori del documento sono al minuto e qui sono moltiplicati per 10. Con turni così lunghi, però, una creatura curata bene morirebbe in una mattina: in 10 minuti un bisogno scende sotto 15 prima che qualcuno possa intervenire.</li>
+        <li>Per questo chi cura risponde ai segnali con il dado, nutrire e carezze valgono un turno di cure (due pasti e tre carezze) e due soglie sono ritoccate: benessere sopra 50 invece di 60, sonno sotto 25 invece di 20. La perdita di salute, 10 a turno, è quella del documento aggiornato.</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<script>
+(() => {
+'use strict';
+
+/* ---------- parametri ---------- */
+const GRUPPI = [
+  { titolo: 'Decadimento da sveglia', p: [
+    ['dNutr', 'Nutrimento', 15], ['dEner', 'Energia', 10], ['dUmore', 'Umore', 5], ['dSoc', 'Socialità da sola', 10] ] },
+  { titolo: 'Socialità in compagnia', p: [
+    ['sVicino', 'Con un vicino (+)', 15], ['sMano', 'In mano (+)', 20] ] },
+  { titolo: 'Nel sonno', p: [
+    ['zNutr', 'Nutrimento (−)', 8], ['zEner', 'Energia (+)', 50] ] },
+  { titolo: 'Gioco e malattia', p: [
+    ['gUmore', 'Gioco: umore (+)', 30], ['gEner', 'Gioco: energia (−)', 30], ['mUmore', 'Malata: umore (−)', 10] ] },
+  { titolo: 'Cure', p: [
+    ['cNutrire', 'Nutrire, due pasti (+)', 50], ['cCarezza', 'Carezze, tre (+)', 15], ['cVoce', 'Voce vicina (+)', 3],
+    ['cSpavento', 'Spavento: umore (−)', 10], ['cRisveglio', 'Risveglio forzato (−)', 5] ] },
+  { titolo: 'Salute', p: [
+    ['hBasso', 'Soglia di trascuratezza', 15], ['hPerdita', 'Perdita per bisogno basso', 10],
+    ['hBene', 'Soglia di benessere', 50], ['hRecupero', 'Recupero', 10] ] },
+  { titolo: 'Soglie degli stati', p: [
+    ['fameIn', 'Fame: entra sotto', 30], ['fameOut', 'Fame: esce sopra', 50],
+    ['sonnoIn', 'Sonno: entra sotto', 25], ['sonnoOut', 'Sonno: esce sopra', 80],
+    ['giocoUmore', 'Gioco: umore sopra', 70], ['giocoEner', 'Gioco: energia sopra', 50],
+    ['noiaUmore', 'Noia: umore sotto', 50],
+    ['malIn', 'Malattia: entra sotto', 30], ['malOut', 'Malattia: esce sopra', 60],
+    ['buioDado', 'Buio: dado almeno', 4] ] },
+  { titolo: 'Chi cura risponde', p: [
+    ['segnale', 'Chiede se un bisogno è sotto', 40],
+    ['rAttenta', 'Attenta: dado almeno', 2], ['rDistratta', 'Distratta: dado almeno', 3], ['rAssente', 'Assente: dado almeno', 6] ] },
+  { titolo: 'Partenza', p: [ ['inizio', 'Bisogni iniziali', 70] ] },
+];
+const NEUTRA = {};
+GRUPPI.forEach(g => g.p.forEach(([k, , v]) => NEUTRA[k] = v));
+let P = { ...NEUTRA };
+
+/* ---------- carte e mazzi ---------- */
+const CARTE = {
+  nessuno:  { nome: 'Nessuno', effetto: 'Non succede niente.', umano: false },
+  nutrire:  { nome: 'Nutrire', effetto: 'Due pasti: +50 nutrimento.', umano: true },
+  carezza:  { nome: 'Carezza', effetto: 'Tre carezze: +15 umore.', umano: true },
+  dormire:  { nome: 'Mettere a dormire', effetto: 'La copre: si addormenta.', umano: true },
+  gioco:    { nome: 'Gioco', effetto: '+30 umore, −30 energia invece di −10.', umano: true },
+  mano:     { nome: 'In mano', effetto: 'Socialità +20 in questo turno.', umano: true },
+  arriva:   { nome: 'Vicino arriva', effetto: 'Resta finché non esce "Vicino se ne va".', umano: false },
+  va:       { nome: 'Vicino se ne va', effetto: 'Torna sola.', umano: false },
+  voce:     { nome: 'Voce vicina', effetto: '+3 socialità.', umano: true },
+  scossa:   { nome: 'Scossa forte', effetto: 'SPAVENTATO, −10 umore.', umano: true },
+  buio:     { nome: 'Buio', effetto: 'Dado: con 4 o più si addormenta.', umano: false },
+};
+const MAZZI = {
+  attenta:   { nessuno: 12, nutrire: 6, carezza: 6, gioco: 4, mano: 4, arriva: 2, va: 2, voce: 2, scossa: 1, buio: 1 },
+  distratta: { nessuno: 22, nutrire: 3, carezza: 3, gioco: 2, mano: 2, arriva: 2, va: 2, voce: 2, scossa: 1, buio: 1 },
+  assente:   { nessuno: 32, nutrire: 1, carezza: 1, gioco: 0, mano: 1, arriva: 2, va: 2, voce: 0, scossa: 1, buio: 0 },
+};
+const NOMI_MAZZI = { attenta: 'Attenta', distratta: 'Distratta', assente: 'Assente' };
+const STATI = ['SVEGLIO', 'DORME', 'AFFAMATO', 'GIOCOSO', 'ANNOIATO', 'PROPRIO', 'SPAVENTATO', 'MALATO', 'MORTO'];
+const BREVE = { SVEGLIO: 'SV', DORME: 'DO', AFFAMATO: 'AF', GIOCOSO: 'GI', ANNOIATO: 'AN', SPAVENTATO: 'SP', MALATO: 'MA', MORTO: '†' };
+const BISOGNI = [['n', 'Nutrimento', 'nutr'], ['e', 'Energia', 'ener'], ['u', 'Umore', 'umore'], ['so', 'Socialità', 'soc']];
+
+/* ---------- stato proprio: condizioni ed effetti del gruppo ---------- */
+// variabili numeriche (con confronto e valore) e fatti del turno (veri o falsi)
+const NUMERI = { n: 'nutrimento', e: 'energia', u: 'umore', so: 'socialità', h: 'salute', ora: 'ora del giorno', soli: 'turni senza cure' };
+const FATTI = {
+  vicino: "c'è un vicino", sola: 'nessun vicino', mano: 'è in mano', curata: 'qualcuno la cura',
+  ...Object.fromEntries(['nutrire', 'carezza', 'gioco', 'voce', 'buio', 'nessuno'].map(c => ['c:' + c, 'carta: ' + CARTE[c].nome.toLowerCase()])),
+};
+const CONFRONTI = ['<', '≤', '≥', '>', '='];
+const SP_NEUTRO = {
+  attivo: false, nome: 'proprio',
+  c1: { v: 'e', o: '<', x: 40 }, c2: { v: '', o: '<', x: 50 }, u: { v: '', o: '>', x: 70 },
+  durata: 1, intervallo: 2, kN: 1, kE: 1, kU: 1, kS: 1,
+};
+const ESEMPI = {
+  esAssopita: { attivo: true, nome: 'assopita', c1: { v: 'ora', o: '≥', x: 18 }, c2: { v: 'e', o: '<', x: 60 }, u: { v: 'curata', o: '<', x: 0 },
+    durata: 1, intervallo: 2, kN: 0.5, kE: 0, kU: 0.5, kS: 1 },
+  esSola: { attivo: true, nome: 'sola', c1: { v: 'sola', o: '<', x: 0 }, c2: { v: 'soli', o: '≥', x: 2 }, u: { v: 'vicino', o: '<', x: 0 },
+    durata: 1, intervallo: 2, kN: 1, kE: 1, kU: 1.5, kS: 2 },
+};
+const copiaSP = o => JSON.parse(JSON.stringify(o));
+let SP = copiaSP(SP_NEUTRO);
+const LIMITE = { durata: 1, intervallo: 2 }; // §4.4: 10 min e 20 min, in turni
+
+const oraDi = t => Math.floor((9 * 60 + (t + 1) * 10) / 60) % 24;
+function misura(v, c) {
+  if (v === 'ora') return oraDi(c.t);
+  if (v === 'soli') return c.s.soli;
+  return c.s[v];
+}
+function vale(cl, c) {
+  if (!cl.v) return false;
+  if (cl.v in FATTI) {
+    if (cl.v === 'vicino') return c.s.vicino;
+    if (cl.v === 'sola') return !c.s.vicino;
+    if (cl.v === 'mano') return c.mano;
+    if (cl.v === 'curata') return c.umano;
+    return c.carte.includes(cl.v.slice(2));
+  }
+  const a = misura(cl.v, c), b = cl.x;
+  return { '<': a < b, '≤': a <= b, '≥': a >= b, '>': a > b, '=': a === b }[cl.o];
+}
+function racconta(cl, c) { // la condizione con il valore del turno, per il diario
+  if (cl.v in FATTI) return FATTI[cl.v];
+  return `${NUMERI[cl.v]} ${misura(cl.v, c)} ${cl.o} ${cl.x}`;
+}
+function descrivi(cl) { // la condizione in astratto, per copiare i parametri
+  if (!cl.v) return '';
+  return cl.v in FATTI ? FATTI[cl.v] : `${NUMERI[cl.v]} ${cl.o} ${cl.x}`;
+}
+const nomeStato = st => st === 'PROPRIO' ? (SP.nome.trim() || 'proprio').toUpperCase() : st;
+const breveStato = st => st === 'PROPRIO' ? nomeStato(st).slice(0, 2) : BREVE[st];
+const statiVisibili = () => STATI.filter(s => s !== 'PROPRIO' || SP.attivo);
+
+/* ---------- caso con seme ---------- */
+function hash(str) {
+  let h = 1779033703 ^ str.length;
+  for (let i = 0; i < str.length; i++) { h = Math.imul(h ^ str.charCodeAt(i), 3432918353); h = (h << 13) | (h >>> 19); }
+  return () => { h = Math.imul(h ^ (h >>> 16), 2246822507); h = Math.imul(h ^ (h >>> 13), 3266489909); return (h ^= h >>> 16) >>> 0; };
+}
+function rng(seme) {
+  let a = hash(String(seme))();
+  return () => { a |= 0; a = (a + 0x6D2B79F5) | 0; let t = Math.imul(a ^ (a >>> 15), 1 | a); t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t; return ((t ^ (t >>> 14)) >>> 0) / 4294967296; };
+}
+function mescola(nomeMazzo, caso) {
+  const carte = [];
+  for (const [c, q] of Object.entries(MAZZI[nomeMazzo])) for (let i = 0; i < q; i++) carte.push(c);
+  for (let i = carte.length - 1; i > 0; i--) { const j = Math.floor(caso() * (i + 1)); [carte[i], carte[j]] = [carte[j], carte[i]]; }
+  return carte;
+}
+
+/* ---------- simulazione ---------- */
+const lim = v => Math.max(0, Math.min(100, Math.round(v)));
+
+function simula({ mazzo, turni, seme, isteresi, rinascite }) {
+  const caso = rng(seme + '|' + mazzo);
+  let pila = mescola(mazzo, caso);
+  const s = { n: P.inizio, e: P.inizio, u: P.inizio, so: P.inizio, h: 100, stato: 'SVEGLIO', fame: false, sonno: false, mal: false, vicino: false, gen: 1,
+    soli: 0, prop: false, propTurni: 0, propUscita: -Infinity };
+  const righe = [];
+  for (let t = 0; t < turni; t++) {
+    const note = [];
+    if (rinascite.has(t) && s.stato === 'MORTO') {
+      Object.assign(s, { n: 70, e: 70, u: 70, so: 70, h: 100, stato: 'SVEGLIO', fame: false, sonno: false, mal: false, gen: s.gen + 1,
+        soli: 0, prop: false, propTurni: 0, propUscita: -Infinity });
+      note.push(`rinascita: generazione ${s.gen}`);
+    }
+    const prima = s.stato;
+    if (!pila.length) pila = mescola(mazzo, caso);
+    const carta = pila.pop();
+
+    if (prima === 'MORTO') {
+      righe.push({ t, carta, risposta: null, ...valori(s), stato: 'MORTO', vicino: s.vicino, gen: s.gen, perche: 'morta: la carta non ha effetto' });
+      continue;
+    }
+
+    // la creatura chiede: chi cura risponde al bisogno più basso, se il dado lo consente
+    let risposta = null;
+    const minimo = Math.min(s.n, s.e, s.u, s.so);
+    if (!s.sonno && (['AFFAMATO', 'ANNOIATO', 'MALATO'].includes(prima) || minimo < P.segnale)) {
+      const d = 1 + Math.floor(caso() * 6), serve = P['r' + mazzo[0].toUpperCase() + mazzo.slice(1)];
+      if (d >= serve) {
+        risposta = minimo === s.n ? 'nutrire' : minimo === s.e ? 'dormire' : minimo === s.so ? 'mano' : s.e > P.giocoEner ? 'gioco' : 'carezza';
+        note.push(`chiede, dado ${d}: risponde con ${CARTE[risposta].nome.toLowerCase()}`);
+      } else note.push(`chiede, dado ${d}: nessuno risponde`);
+    }
+
+    const inProp = prima === 'PROPRIO';
+    const dorme = s.sonno && !inProp; // anche una creatura malata dorme, se ha sonno; nello stato proprio il sonno aspetta
+    let causaSonno = '', umano = false, spavento = false, gioco = false, giocoOk = false, buioOk = false, mano = false, risveglio = false, dado = null;
+
+    for (const c of [risposta, carta]) {
+    if (!c) continue;
+    if (CARTE[c].umano && !(dorme && (c === 'nutrire' || c === 'gioco'))) umano = true;
+    switch (c) {
+      case 'nutrire': if (dorme) note.push('dorme: il pasto è perso'); else s.n += P.cNutrire; break;
+      case 'carezza': s.u += P.cCarezza; break;
+      case 'gioco':
+        if (dorme) note.push('dorme: il gioco è perso');
+        else { gioco = true; giocoOk = s.u > P.giocoUmore && s.e > P.giocoEner; if (!giocoOk) note.push('gioca, ma umore o energia sono troppo bassi per GIOCOSO'); }
+        break;
+      case 'mano': mano = true; break;
+      case 'arriva': s.vicino = true; break;
+      case 'va': s.vicino = false; break;
+      case 'voce': s.so += P.cVoce; break;
+      case 'scossa':
+        if (prima === 'MALATO') { note.push('malata: la scossa non la spaventa'); break; }
+        spavento = true; s.u -= P.cSpavento;
+        if (dorme) { risveglio = true; s.u -= P.cRisveglio; s.sonno = false; note.push('risveglio forzato'); }
+        break;
+      case 'dormire': buioOk = true; causaSonno = 'messa a dormire'; break;
+      case 'buio':
+        if (!dorme && !buioOk) { dado = 1 + Math.floor(caso() * 6); buioOk = dado >= P.buioDado; if (buioOk) causaSonno = 'buio'; note.push(`buio, dado ${dado}${buioOk ? ': si addormenta' : ': resta sveglia'}`); }
+        break;
+    }
+    }
+
+    // decadimento dello stato in cui ha passato il turno; nello stato proprio, moltiplicato dai coefficienti della specie
+    const k = inProp ? SP : { kN: 1, kE: 1, kU: 1, kS: 1 };
+    const soc = mano ? P.sMano : s.vicino ? P.sVicino : -P.dSoc * k.kS;
+    if (dorme && !risveglio) {
+      s.n -= P.zNutr; s.e += P.zEner; s.u -= P.dUmore; s.so += soc / 2;
+    } else {
+      s.n -= P.dNutr * k.kN;
+      s.e -= gioco ? P.gEner : P.dEner * k.kE;
+      if (gioco) s.u += P.gUmore;
+      s.u -= prima === 'MALATO' ? P.mUmore : P.dUmore * k.kU;
+      s.so += soc;
+    }
+    s.soli = umano ? 0 : s.soli + 1;
+    s.n = lim(s.n); s.e = lim(s.e); s.u = lim(s.u); s.so = lim(s.so);
+
+    // salute
+    const bassi = [s.n, s.e, s.u, s.so].filter(v => v < P.hBasso).length;
+    s.h -= bassi * P.hPerdita;
+    if ([s.n, s.e, s.u, s.so].every(v => v > P.hBene)) s.h += P.hRecupero;
+    s.h = lim(s.h);
+
+    // soglie con o senza isteresi
+    if (isteresi) {
+      if (!s.fame && s.n < P.fameIn) s.fame = true; else if (s.fame && s.n > P.fameOut) s.fame = false;
+      if (!s.mal && s.h < P.malIn) s.mal = true; else if (s.mal && s.h > P.malOut) s.mal = false;
+      if (!s.sonno && (s.e < P.sonnoIn || buioOk)) s.sonno = true; else if (s.sonno && s.e > P.sonnoOut) s.sonno = false;
+    } else {
+      s.fame = s.n < P.fameIn;
+      s.mal = s.h < P.malIn;
+      s.sonno = s.e < P.sonnoIn || buioOk;
+    }
+
+    // stato proprio: fine per durata o per condizione d'uscita
+    const ctx = { s, t, mano, umano, carte: [risposta, carta] };
+    let notaProp = '';
+    if (SP.attivo && inProp) {
+      s.propTurni++;
+      if (s.propTurni >= SP.durata) notaProp = `fine di ${nomeStato('PROPRIO')}: ${SP.durata * 10} minuti`;
+      else if (vale(SP.u, ctx)) notaProp = `fine di ${nomeStato('PROPRIO')}: ${racconta(SP.u, ctx)}`;
+      if (notaProp) { s.prop = false; s.propUscita = t; }
+    }
+    const entra = SP.attivo && !s.prop && prima === 'SVEGLIO' && t - s.propUscita >= SP.intervallo &&
+      vale(SP.c1, ctx) && (!SP.c2.v || vale(SP.c2, ctx));
+
+    // priorità
+    let stato;
+    if (s.h <= 0) stato = 'MORTO';
+    else if (s.mal) stato = 'MALATO';
+    else if (spavento) stato = 'SPAVENTATO';
+    else if (SP.attivo && (s.prop || entra)) stato = 'PROPRIO';
+    else if (s.sonno) stato = 'DORME';
+    else if (s.fame) stato = 'AFFAMATO';
+    else if (gioco && giocoOk) stato = 'GIOCOSO';
+    else if (!umano && s.u < P.noiaUmore) stato = 'ANNOIATO';
+    else stato = 'SVEGLIO';
+
+    if (s.prop && (stato === 'MALATO' || stato === 'MORTO')) {
+      s.prop = false; s.propUscita = t; notaProp = `${stato === 'MALATO' ? 'la malattia' : 'la morte'} chiude ${nomeStato('PROPRIO')}`;
+    }
+    if (stato === 'PROPRIO' && !s.prop) { s.prop = true; s.propTurni = 0; }
+
+    if (notaProp && stato === 'SVEGLIO') note.unshift(notaProp);
+    else {
+      if (stato !== prima) {
+        note.unshift(stato === 'PROPRIO'
+          ? (entra ? [SP.c1, SP.c2].filter(cl => cl.v).map(cl => racconta(cl, ctx)).join(' e ') : 'lo spavento è passato: riprende')
+          : motivo(stato, prima, s, causaSonno, isteresi));
+      }
+      if (notaProp) note.push(notaProp);
+    }
+    s.stato = stato;
+    righe.push({ t, carta, risposta, ...valori(s), stato, vicino: s.vicino, gen: s.gen, perche: note.join(' · ') });
+  }
+  return righe;
+}
+const valori = s => ({ n: s.n, e: s.e, u: s.u, so: s.so, h: s.h });
+
+function motivo(stato, prima, s, causaSonno, ist) {
+  switch (stato) {
+    case 'MORTO': return 'salute a 0';
+    case 'MALATO': return s.h < P.malIn ? `salute ${s.h} < ${P.malIn}` : `è ancora malata: salute ${s.h}, guarisce sopra ${P.malOut}`;
+    case 'SPAVENTATO': return 'scossa forte';
+    case 'DORME': return causaSonno || (s.e < P.sonnoIn ? `energia ${s.e} < ${P.sonnoIn}` : `ha ancora sonno: energia ${s.e}, si sveglia sopra ${P.sonnoOut}`);
+    case 'AFFAMATO': return s.n < P.fameIn ? `nutrimento ${s.n} < ${P.fameIn}` : `ha ancora fame: nutrimento ${s.n}, sazia sopra ${P.fameOut}`;
+    case 'GIOCOSO': return 'gioco con umore ed energia alti';
+    case 'ANNOIATO': return `nessuna cura e umore ${s.u} < ${P.noiaUmore}`;
+  }
+  // ritorno al perno: spiega da cosa esce
+  switch (prima) {
+    case 'AFFAMATO': return `nutrimento ${s.n} ${ist ? '> ' + P.fameOut : '≥ ' + P.fameIn}: non ha più fame`;
+    case 'DORME': return s.e > P.sonnoOut || !ist ? `energia ${s.e}: si sveglia` : 'si sveglia';
+    case 'MALATO': return `salute ${s.h} ${ist ? '> ' + P.malOut : '≥ ' + P.malIn}: guarita`;
+    case 'SPAVENTATO': return 'lo spavento passa';
+    case 'GIOCOSO': return 'il gioco è finito';
+    case 'ANNOIATO': return 'qualcuno se ne occupa';
+  }
+  return 'torna a SVEGLIO';
+}
+
+/* ---------- stato della pagina ---------- */
+const $ = id => document.getElementById(id);
+const ui = { mazzo: $('mazzo'), durata: $('durata'), seme: $('seme'), isteresi: $('isteresi') };
+let righe = [], visti = 0, rinascite = new Set(), timer = null;
+
+function opzioni() {
+  return { mazzo: ui.mazzo.value, turni: +ui.durata.value, seme: ui.seme.value.trim() || 'isia', isteresi: ui.isteresi.checked, rinascite };
+}
+function ricalcola(tieni = true) {
+  righe = simula(opzioni());
+  if (!tieni) visti = 0;
+  visti = Math.min(visti, righe.length);
+  disegna();
+  disegnaTre();
+}
+
+function ora(t) { // ora alla fine del turno t (t = -1: partenza)
+  const min = 9 * 60 + (t + 1) * 10;
+  const h = Math.floor(min / 60) % 24, m = min % 60;
+  return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+}
+const nomeTurno = r => (r.risposta ? CARTE[r.risposta].nome + ' (risposta) + ' : '') + CARTE[r.carta].nome;
+const pill = (stato, cls = '') => `<span class="pill ${cls}" style="background:var(--st-${stato.toLowerCase()});color:var(--on-${stato.toLowerCase()})">${nomeStato(stato)}</span>`;
+
+/* ---------- grafico ---------- */
+const NS = 'http://www.w3.org/2000/svg';
+const G = { W: 800, H: 270, l: 34, r: 96, top: 12, bot: 26 };
+const xDi = (i, n) => G.l + (i / n) * (G.W - G.l - G.r);
+const yDi = v => G.top + (1 - v / 100) * (G.H - G.top - G.bot);
+function el(tag, attr, testo) {
+  const e = document.createElementNS(NS, tag);
+  // le variabili CSS valgono solo nello stile, non negli attributi di presentazione
+  let stile = '';
+  for (const k in attr) {
+    if (typeof attr[k] === 'string' && attr[k].includes('var(')) stile += `${k}:${attr[k]};`;
+    else e.setAttribute(k, attr[k]);
+  }
+  if (stile) e.setAttribute('style', stile);
+  if (testo != null) e.textContent = testo;
+  return e;
+}
+function punti(campo) { // partenza + righe viste
+  const start = campo === 'h' ? 100 : P.inizio;
+  return [start, ...righe.slice(0, visti).map(r => r[campo])];
+}
+function passoOre(n) { return n <= 24 ? 6 : n <= 72 ? 12 : 18; }
+
+function disegnaVita() {
+  const svg = $('svgVita'); svg.replaceChildren();
+  const n = righe.length;
+  // griglia
+  for (const v of [0, 25, 50, 75, 100]) {
+    svg.append(el('line', { x1: G.l, x2: G.W - G.r, y1: yDi(v), y2: yDi(v), stroke: 'var(--grid)', 'stroke-width': 1 }));
+    svg.append(el('text', { x: G.l - 8, y: yDi(v) + 4, 'text-anchor': 'end', 'font-size': 11, fill: 'var(--muted)', 'font-family': 'var(--mono)' }, v));
+  }
+  const passo = passoOre(n);
+  for (let i = 0; i <= n; i += passo) {
+    svg.append(el('line', { x1: xDi(i, n), x2: xDi(i, n), y1: G.top, y2: G.H - G.bot, stroke: 'var(--grid)', 'stroke-width': 1 }));
+    svg.append(el('text', { x: xDi(i, n), y: G.H - 8, 'text-anchor': 'middle', 'font-size': 11, fill: 'var(--muted)', 'font-family': 'var(--mono)' }, ora(i - 1)));
+  }
+  // salute, tratteggiata
+  const linea = (campo, colore, extra = {}) => {
+    const pts = punti(campo);
+    if (pts.length < 2) return;
+    svg.append(el('polyline', { points: pts.map((v, i) => `${xDi(i, n).toFixed(1)},${yDi(v).toFixed(1)}`).join(' '), fill: 'none', stroke: colore, 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round', ...extra }));
+  };
+  linea('h', 'var(--muted)', { 'stroke-dasharray': '5 4', 'stroke-width': 1.5 });
+  BISOGNI.forEach(([c, , tok]) => linea(c, `var(--${tok})`));
+  // etichette dirette in fondo alle linee, distanziate
+  const ultimo = visti;
+  const etich = [...BISOGNI.map(([c, nome, tok]) => ({ nome, tok, v: punti(c)[ultimo] })), { nome: 'Salute', tok: 'muted', v: punti('h')[ultimo] }]
+    .map(o => ({ ...o, y: yDi(o.v) })).sort((a, b) => a.y - b.y);
+  for (let i = 1; i < etich.length; i++) if (etich[i].y - etich[i - 1].y < 13) etich[i].y = etich[i - 1].y + 13;
+  const xu = xDi(ultimo, n);
+  etich.forEach(o => {
+    svg.append(el('circle', { cx: xu, cy: yDi(o.v), r: 3.5, fill: `var(--${o.tok})`, stroke: 'var(--surface)', 'stroke-width': 2 }));
+    svg.append(el('text', { x: xu + 8, y: o.y + 4, 'font-size': 11.5, fill: 'var(--fg)' }, `${o.nome} ${o.v}`));
+  });
+  // mirino per il passaggio del mouse
+  svg.append(el('line', { id: 'mirino', x1: 0, x2: 0, y1: G.top, y2: G.H - G.bot, stroke: 'var(--muted)', 'stroke-width': 1, visibility: 'hidden' }));
+}
+
+function disegnaStriscia(svg, rr, n, conEtichette) {
+  svg.replaceChildren();
+  const h = +svg.viewBox.baseVal.height;
+  rr.forEach((r, i) => {
+    const x0 = xDi(i, n), x1 = xDi(i + 1, n);
+    const rect = el('rect', { x: x0, y: 2, width: Math.max(0.5, x1 - x0 - (n <= 72 ? 1 : 0)), height: h - 4, fill: `var(--st-${r.stato.toLowerCase()})` });
+    rect.append(el('title', {}, `${ora(i - 1)}–${ora(i)} · ${nomeStato(r.stato)}`));
+    svg.append(rect);
+  });
+  if (!conEtichette) return;
+  // etichette sulle sequenze abbastanza larghe
+  let i = 0;
+  while (i < rr.length) {
+    let j = i; while (j + 1 < rr.length && rr[j + 1].stato === rr[i].stato) j++;
+    const x0 = xDi(i, n), x1 = xDi(j + 1, n), larg = x1 - x0, st = rr[i].stato, nome = nomeStato(st);
+    const testo = larg > nome.length * 7.2 + 8 ? nome : larg > 22 ? breveStato(st) : '';
+    if (testo) svg.append(el('text', { x: (x0 + x1) / 2, y: h / 2 + 4, 'text-anchor': 'middle', 'font-size': 10.5, 'font-family': 'var(--mono)', fill: `var(--on-${st.toLowerCase()})`, 'pointer-events': 'none' }, testo));
+    i = j + 1;
+  }
+}
+
+/* ---------- passaggio del mouse ---------- */
+function attivaTip() {
+  const box = $('grafico'), tip = $('tip');
+  const svgs = [$('svgVita'), $('svgStati')];
+  const muovi = ev => {
+    const svg = ev.currentTarget, rc = svg.getBoundingClientRect();
+    const x = (ev.clientX - rc.left) * (G.W / rc.width);
+    const n = righe.length;
+    const i = Math.round(((x - G.l) / (G.W - G.l - G.r)) * n);
+    if (i < 1 || i > visti) { nascondi(); return; }
+    const r = righe[i - 1];
+    const mir = $('mirino');
+    if (mir) { mir.setAttribute('x1', xDi(i, n)); mir.setAttribute('x2', xDi(i, n)); mir.setAttribute('visibility', 'visible'); }
+    tip.innerHTML = `<b>${ora(i - 1)} · ${nomeTurno(r)}</b>` +
+      BISOGNI.map(([c, nome, tok]) => `<div class="r"><span><i style="background:var(--${tok})"></i>${nome}</span><span>${r[c]}</span></div>`).join('') +
+      `<div class="r"><span><i style="background:var(--muted)"></i>Salute</span><span>${r.h}</span></div>` +
+      `<div style="margin-top:4px">${pill(r.stato)}</div>`;
+    tip.hidden = false;
+    const bb = box.getBoundingClientRect();
+    let left = ev.clientX - bb.left + 14;
+    if (left + tip.offsetWidth > bb.width - 8) left = ev.clientX - bb.left - tip.offsetWidth - 14;
+    tip.style.left = Math.max(4, left) + 'px';
+    tip.style.top = Math.max(4, ev.clientY - bb.top - tip.offsetHeight / 2) + 'px';
+  };
+  const nascondi = () => { tip.hidden = true; const m = $('mirino'); if (m) m.setAttribute('visibility', 'hidden'); };
+  svgs.forEach(s => { s.addEventListener('pointermove', muovi); s.addEventListener('pointerleave', nascondi); });
+}
+
+/* ---------- pannelli ---------- */
+function disegnaCarta() {
+  const box = $('carta');
+  if (!visti) {
+    box.innerHTML = `<span class="ora">${ora(-1)} · partenza</span><span class="nome">Pronta</span>
+      <span class="effetto">Mazzo ${NOMI_MAZZI[ui.mazzo.value].toLowerCase()}, tutti i bisogni a ${P.inizio}, salute 100.</span>${pill('SVEGLIO', 'grande')}${misure({ n: P.inizio, e: P.inizio, u: P.inizio, so: P.inizio, h: 100 })}`;
+    return;
+  }
+  const r = righe[visti - 1];
+  box.innerHTML = `<span class="ora">${ora(r.t - 1)}–${ora(r.t)} · turno ${r.t + 1} di ${righe.length}${r.gen > 1 ? ' · generazione ' + r.gen : ''}</span>
+    ${r.risposta ? `<span class="effetto">Risposta di chi cura</span><span class="nome">${CARTE[r.risposta].nome}</span><span class="effetto">${CARTE[r.risposta].effetto}</span><span class="effetto">Carta pescata</span>` : ''}
+    <span class="nome">${CARTE[r.carta].nome}</span><span class="effetto">${CARTE[r.carta].effetto}${r.vicino ? ' Ha un vicino.' : ''}</span>
+    ${pill(r.stato, 'grande')}${r.perche ? `<p class="perche">${r.perche}</p>` : ''}${misure(r)}`;
+}
+function misure(r) {
+  const riga = (nome, v, colore) => `<span>${nome}</span><div class="barra"><div style="width:${v}%;background:${colore}"></div></div><span class="v">${v}</span>`;
+  return `<div class="misure">${BISOGNI.map(([c, nome, tok]) => riga(nome, r[c], `var(--${tok})`)).join('')}${riga('Salute', r.h, 'var(--muted)')}</div>`;
+}
+
+function disegnaRiassunto() {
+  const rr = righe.slice(0, visti);
+  const conta = Object.fromEntries(STATI.map(s => [s, 0]));
+  rr.forEach(r => conta[r.stato]++);
+  let transizioni = 0; rr.forEach((r, i) => { if (i && r.stato !== rr[i - 1].stato) transizioni++; });
+  if (rr.length && rr[0].stato !== 'SVEGLIO') transizioni++;
+  $('riassunto').innerHTML = statiVisibili().map(s => `<span>${pill(s)} <span class="n">${conta[s] * 10} min</span></span>`).join('');
+  const mai = statiVisibili().filter(s => !conta[s] && s !== 'MORTO').map(nomeStato);
+  const malata = rr.find(r => r.stato === 'MALATO'), morta = rr.find(r => r.stato === 'MORTO');
+  const frasi = [];
+  if (!rr.length) frasi.push('Pescate una carta per cominciare.');
+  else {
+    frasi.push(`${transizioni} cambi di stato in ${rr.length * 10} minuti.`);
+    if (malata) frasi.push(`Si ammala alle ${ora(malata.t)}.`);
+    if (morta) frasi.push(`Muore alle ${ora(morta.t)}.`);
+    if (visti === righe.length && mai.length) frasi.push(`Mai visti: ${mai.join(', ')}.`);
+  }
+  $('avviso').textContent = frasi.join(' ');
+  $('rinasci').hidden = !(rr.length && rr[rr.length - 1].stato === 'MORTO');
+}
+
+function disegnaDiario() {
+  const corpo = $('diario');
+  corpo.innerHTML = righe.slice(0, visti).map((r, i) => {
+    const v = c => `<td class="v${r[c] < P.hBasso ? ' basso' : ''}">${r[c]}</td>`;
+    return `<tr${i === visti - 1 ? ' class="attuale"' : ''}><td class="ora">${ora(r.t)}</td><td>${nomeTurno(r)}</td>${v('n')}${v('e')}${v('u')}${v('so')}<td class="v">${r.h}</td><td>${pill(r.stato)}</td><td class="perche">${r.perche}</td></tr>`;
+  }).join('');
+  const tab = corpo.closest('.tab');
+  tab.scrollTop = tab.scrollHeight;
+}
+
+function disegnaTre() {
+  const o = opzioni();
+  $('tre').innerHTML = '';
+  for (const m of ['attenta', 'distratta', 'assente']) {
+    const rr = simula({ ...o, mazzo: m, rinascite: new Set() });
+    const n = rr.length;
+    const box = document.createElement('div'); box.className = 'pannello';
+    const vita = el('svg', { viewBox: `0 0 ${G.W} 170`, role: 'img', 'aria-label': `Bisogni con il mazzo ${m}` });
+    const yy = v => 8 + (1 - v / 100) * 150;
+    [0, 50, 100].forEach(v => vita.append(el('line', { x1: G.l, x2: G.W - G.r, y1: yy(v), y2: yy(v), stroke: 'var(--grid)', 'stroke-width': 2 })));
+    const traccia = (campo, colore, extra = {}) => vita.append(el('polyline', {
+      points: [campo === 'h' ? 100 : P.inizio, ...rr.map(r => r[campo])].map((v, i) => `${xDi(i, n).toFixed(1)},${yy(v).toFixed(1)}`).join(' '),
+      fill: 'none', stroke: colore, 'stroke-width': 3, 'stroke-linejoin': 'round', ...extra }));
+    traccia('h', 'var(--muted)', { 'stroke-dasharray': '8 6', 'stroke-width': 2.5 });
+    BISOGNI.forEach(([c, , tok]) => traccia(c, `var(--${tok})`));
+    const striscia = el('svg', { viewBox: `0 0 ${G.W} 40`, role: 'img', 'aria-label': `Stati con il mazzo ${m}` });
+    const morta = rr.find(r => r.stato === 'MORTO'), malata = rr.find(r => r.stato === 'MALATO');
+    const conta = s => rr.filter(r => r.stato === s).length * 10;
+    box.innerHTML = `<h3>${NOMI_MAZZI[m]}</h3>`;
+    box.append(vita, striscia);
+    const esito = document.createElement('p'); esito.className = 'esito';
+    esito.textContent = morta ? `Muore alle ${ora(morta.t)}.` : malata ? `Si ammala alle ${ora(malata.t)}, malata per ${conta('MALATO')} minuti.` :
+      `Sta bene: affamata ${conta('AFFAMATO')} min, annoiata ${conta('ANNOIATO')} min, giocosa ${conta('GIOCOSO')} min${SP.attivo ? `, ${nomeStato('PROPRIO').toLowerCase()} ${conta('PROPRIO')} min` : ''}.`;
+    box.append(esito);
+    $('tre').append(box);
+    disegnaStriscia(striscia, rr, n, false);
+  }
+}
+
+function disegna() {
+  disegnaVita();
+  disegnaStriscia($('svgStati'), righe.slice(0, visti), righe.length, true);
+  disegnaCarta(); disegnaRiassunto(); disegnaDiario(); disegnaEsitoProp();
+  $('pesca').disabled = $('tutto').disabled = visti >= righe.length;
+}
+
+/* ---------- parametri ---------- */
+function costruisciParametri() {
+  $('gruppi').innerHTML = GRUPPI.map(g => `<div class="gruppo"><h3>${g.titolo}</h3>${g.p.map(([k, nome]) =>
+    `<div class="param" data-k="${k}"><label for="p_${k}">${nome}</label><input type="number" id="p_${k}" min="0" max="100" step="1" value="${P[k]}"></div>`).join('')}</div>`).join('');
+  $('gruppi').addEventListener('input', ev => {
+    const k = ev.target.id.slice(2), v = Number(ev.target.value);
+    if (ev.target.value === '' || !isFinite(v)) return;
+    P[k] = v; segnaModificati(); ricalcola();
+  });
+  segnaModificati();
+}
+function segnaModificati() {
+  let n = 0;
+  document.querySelectorAll('.param').forEach(d => { const mod = P[d.dataset.k] !== NEUTRA[d.dataset.k]; d.classList.toggle('mod', mod); if (mod) n++; });
+  $('contaMod').textContent = n ? `${n} parametri diversi dalla specie neutra, in evidenza.` : 'Tutti i valori sono quelli della specie neutra.';
+}
+
+/* ---------- pannello dello stato proprio ---------- */
+const VUOTO = { c1: null, c2: "nient'altro", u: 'solo la durata' };
+function costruisciProp() {
+  document.querySelectorAll('.clausola').forEach(box => {
+    const c = box.dataset.c;
+    const voci = [...(VUOTO[c] ? [['', VUOTO[c]]] : []),
+      ...Object.entries(NUMERI), ...Object.entries(FATTI)];
+    box.innerHTML = `<select id="${c}v" aria-label="Variabile">${voci.map(([k, t]) => `<option value="${k}">${t}</option>`).join('')}</select>` +
+      `<select id="${c}o" aria-label="Confronto">${CONFRONTI.map(o => `<option>${o}</option>`).join('')}</select>` +
+      `<input type="number" id="${c}x" min="0" max="100" step="1" aria-label="Valore">`;
+  });
+  scriviProp();
+  $('prop').addEventListener('input', () => { leggiProp(); ricalcola(); });
+  $('prop').addEventListener('change', () => { leggiProp(); ricalcola(); });
+  for (const id in ESEMPI) $(id).addEventListener('click', () => { SP = copiaSP(ESEMPI[id]); scriviProp(); ricalcola(); });
+}
+const numero = (id, min, max, def) => { const v = Number($(id).value); return $(id).value === '' || !isFinite(v) ? def : Math.max(min, Math.min(max, v)); };
+function leggiProp() {
+  SP.attivo = $('propAttivo').checked;
+  SP.nome = $('propNome').value;
+  for (const c of ['c1', 'c2', 'u']) SP[c] = { v: $(c + 'v').value, o: $(c + 'o').value, x: numero(c + 'x', 0, 100, SP[c].x) };
+  SP.durata = numero('propDurata', 1, 18, SP.durata);
+  SP.intervallo = numero('propIntervallo', 0, 36, SP.intervallo);
+  for (const k of ['kN', 'kE', 'kU', 'kS']) SP[k] = numero(k, 0, 2, SP[k]);
+  aggiornaVista();
+}
+function scriviProp() {
+  $('propAttivo').checked = SP.attivo;
+  $('propNome').value = SP.nome;
+  for (const c of ['c1', 'c2', 'u']) { $(c + 'v').value = SP[c].v; $(c + 'o').value = SP[c].o; $(c + 'x').value = SP[c].x; }
+  $('propDurata').value = SP.durata; $('propIntervallo').value = SP.intervallo;
+  for (const k of ['kN', 'kE', 'kU', 'kS']) $(k).value = SP[k];
+  aggiornaVista();
+}
+function aggiornaVista() { // confronto e valore servono solo alle variabili numeriche
+  $('prop').classList.toggle('spento', !SP.attivo);
+  for (const c of ['c1', 'c2', 'u']) { const num = SP[c].v in NUMERI; $(c + 'o').hidden = $(c + 'x').hidden = !num; }
+  const limiti = [];
+  if (SP.durata > LIMITE.durata) limiti.push(`la durata massima (${SP.durata * 10} min) supera i 10 minuti della piattaforma`);
+  if (SP.intervallo < LIMITE.intervallo) limiti.push(`l'intervallo (${SP.intervallo * 10} min) è sotto i 20 minuti della piattaforma`);
+  $('limiteProp').hidden = !(SP.attivo && limiti.length);
+  $('limiteProp').textContent = limiti.length ? `Oltre i limiti del §4.4: ${limiti.join('; ')}. Va bene per provare: se serve davvero, è un argomento per cambiare il documento (decisione aperta 9).` : '';
+}
+function disegnaEsitoProp() {
+  const box = $('esitoProp');
+  if (!SP.attivo) { box.textContent = 'Spento: la creatura vive con i soli stati comuni, come nella partita su carta.'; return; }
+  const nome = nomeStato('PROPRIO').toLowerCase();
+  let volte = 0, turni = 0;
+  righe.forEach((r, i) => { if (r.stato === 'PROPRIO') { turni++; if (!i || righe[i - 1].stato !== 'PROPRIO' && righe[i - 1].stato !== 'SPAVENTATO') volte++; } });
+  box.textContent = volte
+    ? `In questa partita (${righe.length * 10} minuti) entra in ${nome} ${volte} ${volte === 1 ? 'volta' : 'volte'}, per ${turni * 10} minuti in tutto.`
+    : `In questa partita non entra mai in ${nome}: la condizione non vale mai mentre la creatura è SVEGLIO. Provate un'altra durata, un altro mazzo o condizioni più larghe.`;
+}
+
+/* ---------- copia ---------- */
+async function copia(testo, bottone) {
+  const orig = bottone.textContent;
+  try { await navigator.clipboard.writeText(testo); bottone.textContent = 'Copiato'; }
+  catch { bottone.textContent = 'Copia non riuscita'; }
+  setTimeout(() => bottone.textContent = orig, 1600);
+}
+
+/* ---------- comandi ---------- */
+function ferma() { clearInterval(timer); timer = null; $('tutto').textContent = 'Gioca fino alla fine'; }
+$('pesca').addEventListener('click', () => { ferma(); if (visti < righe.length) { visti++; disegna(); } });
+$('tutto').addEventListener('click', () => {
+  if (timer) { ferma(); return; }
+  const lento = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!lento) { visti = righe.length; disegna(); return; }
+  $('tutto').textContent = 'Pausa';
+  timer = setInterval(() => { if (visti >= righe.length) { ferma(); return; } visti++; disegna(); }, righe.length > 30 ? 60 : 220);
+});
+$('ricomincia').addEventListener('click', () => { ferma(); rinascite = new Set(); ricalcola(false); });
+$('nuovoSeme').addEventListener('click', () => {
+  ferma();
+  const sill = ['ra', 'mo', 'ti', 'lu', 'ne', 'ka', 'so', 've', 'pi', 'da'];
+  ui.seme.value = Array.from({ length: 3 }, () => sill[Math.floor(Math.random() * sill.length)]).join('') + Math.floor(Math.random() * 90 + 10);
+  rinascite = new Set(); ricalcola(false);
+});
+$('rinasci').addEventListener('click', () => { ferma(); rinascite.add(visti); ricalcola(); if (visti < righe.length) { visti++; disegna(); } });
+[ui.mazzo, ui.durata, ui.seme].forEach(c => c.addEventListener('change', () => { ferma(); rinascite = new Set(); ricalcola(false); }));
+ui.isteresi.addEventListener('change', () => ricalcola());
+$('neutra').addEventListener('click', () => { P = { ...NEUTRA }; SP = copiaSP(SP_NEUTRO); scriviProp(); document.querySelectorAll('.param input').forEach(i => i.value = P[i.id.slice(2)]); segnaModificati(); ricalcola(); });
+$('copia').addEventListener('click', ev => {
+  const testa = 'ora,carta,nutrimento,energia,umore,socialita,salute,stato,perche';
+  const corpo = righe.slice(0, visti).map(r => [ora(r.t), nomeTurno(r), r.n, r.e, r.u, r.so, r.h, nomeStato(r.stato), `"${r.perche.replace(/"/g, '""')}"`].join(','));
+  copia([testa, ...corpo].join('\n'), ev.currentTarget);
+});
+$('copiaParam').addEventListener('click', ev => {
+  const mod = Object.keys(P).filter(k => P[k] !== NEUTRA[k]);
+  const nomi = Object.fromEntries(GRUPPI.flatMap(g => g.p.map(([k, nome]) => [k, `${g.titolo} · ${nome}`])));
+  let testo = mod.length ? mod.map(k => `${nomi[k]}: ${NEUTRA[k]} → ${P[k]}`).join('\n') : 'Nessun parametro modificato: specie neutra.';
+  if (SP.attivo) testo += `\n\nStato proprio ${nomeStato('PROPRIO')}\n` +
+    `Entra da SVEGLIO se: ${[SP.c1, SP.c2].map(descrivi).filter(Boolean).join(' e ')}\n` +
+    `Esce se: ${SP.u.v ? descrivi(SP.u) + ', oppure ' : ''}dopo ${SP.durata * 10} min\n` +
+    `Non torna prima di: ${SP.intervallo * 10} min\n` +
+    `Decadimento durante: nutrimento ×${SP.kN}, energia ×${SP.kE}, umore ×${SP.kU}, socialità da sola ×${SP.kS}`;
+  copia(testo, ev.currentTarget);
+});
+
+/* ---------- avvio: una mattina già giocata a metà, come esempio ---------- */
+costruisciParametri();
+costruisciProp();
+attivaTip();
+righe = simula(opzioni());
+visti = 12;
+disegna();
+disegnaTre();
+})();
+</script>
