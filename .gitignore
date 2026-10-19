@@ -11,3 +11,6 @@ __pycache__/
 
 # log del banco di prova
 *.log
+
+# materiali privati, mai su GitHub
+private/
