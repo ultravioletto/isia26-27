@@ -82,7 +82,7 @@ Ogni lezione ha la stessa forma: la parte frontale introduce cosa serve al lavor
 
 - **Frontale.** Dalla misura all'evento: filtri, soglie, isteresi, tempo minimo. I nove gesti comuni e il contesto (tavolo, mano, tasca). Perché la piattaforma definisce il gesto e la specie il suo significato.
 - **Gruppo.** Consegna dei dispositivi. Caricare l'Esploratore, percorrerne le 15 pagine e misurare scosse, inclinazioni, livelli di voce e luce nella stanza vera.
-- **Consegna.** Tabella delle misure: i valori osservati per scossa, inclinazione, voce e luce nella stanza.
+- **Consegna.** Tabella delle misure: i valori osservati per scossa, inclinazione, voce e luce nella stanza. Piano dettagliato: `lezione-03-sensi-e-gesti.md`.
 
 ### 4. Espressione senza volto
 

@@ -32,6 +32,7 @@ code/      il codice Arduino per M5Stack CoreS3
 | --- | --- |
 | [programma-corso-interaction-design-26-27.md](docs/programma-corso-interaction-design-26-27.md) · [pdf](docs/programma-corso-interaction-design-26-27.pdf) | Il programma del corso, lezione per lezione. |
 | [lezione-02-la-creatura-nel-tempo.md](docs/lezione-02-la-creatura-nel-tempo.md) | Piano della lezione 2: macchine a stati finiti, bisogni nel tempo, simulazione su carta e giornata tipo della specie. |
+| [lezione-03-sensi-e-gesti.md](docs/lezione-03-sensi-e-gesti.md) | Piano della lezione 3 (bozza): dalla misura all'evento, i nove gesti e il contesto, consegna dei dispositivi e misure della stanza con l'Esploratore. |
 | [segni-macchina-a-stati.html](docs/segni-macchina-a-stati.html) | I segni per disegnare una macchina a stati secondo UML, il confronto con le altre notazioni e il modello della creatura ridisegnato, con lo stato proprio e l'unisono. |
 | [simulatore-vita-creatura.html](docs/simulatore-vita-creatura.html) | Il simulatore della vita di una creatura in turni da 10 minuti, con i tre mazzi di cura, i parametri della specie e lo stato proprio modificabili. |
 | [unisono-stati.html](docs/unisono-stati.html) | L'unisono come macchina a stati gerarchica: ingresso, sessione, uscita, eccezioni e recupero. |
