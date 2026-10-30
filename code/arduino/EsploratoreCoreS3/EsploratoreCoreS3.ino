@@ -9,6 +9,12 @@
 //          Camera, Microfono, Touch, Altoparlante, Alimentazione e orologio,
 //          Wi-Fi, Bluetooth LE, ESP-NOW, I2C, Scheda SD
 //
+//  Laboratorio dei sensi (lezione 3): dalla misura all'evento, un senso
+//  alla volta, con soglia, isteresi, tempo minimo, finestra, pausa e
+//  filtro regolabili. Si comanda dal Monitor seriale (115200 baud,
+//  fine riga "Nuova riga"): scrivi ? per l'aiuto. Con "grafico" i numeri
+//  vanno al Plotter seriale. Vedi la sezione "Laboratorio dei sensi".
+//
 //  Scheda:   M5CoreS3 (pacchetto schede M5Stack)
 //  Librerie: M5CoreS3 (installa anche M5Unified e M5GFX)
 //            La camera e il sensore di luce usano le classi del pacchetto
@@ -46,6 +52,7 @@ const char* NOMI[N_PAGINE] = { "Info", "Accelerometro", "Giroscopio", "Bussola",
                                "Camera", "Microfono", "Touch", "Altoparlante", "Alimentazione",
                                "Wi-Fi", "Bluetooth LE", "ESP-NOW", "I2C", "Scheda SD" };
 int pagina = P_INFO;
+int labCorrente = -1;          // laboratorio dei sensi in corso, -1 = si vedono le pagine
 bool cameraOk = false, luceOk = false;
 
 // ---------------------------------------------------------------- utilità
@@ -121,6 +128,12 @@ void disegnaBarraNavigazione() {
   d.drawString(">", W - TASTO / 2, TOP / 2);
   d.setFont(&fonts::DejaVu12);
   d.setTextColor(BIANCO, SCURO);
+  if (labCorrente >= 0) {
+    d.drawString(String("Lab ") + nomeLabCorrente(), W / 2, TOP / 2 - 8);
+    d.setTextColor(GRIGIO, SCURO);
+    d.drawString("< o > per uscire", W / 2, TOP / 2 + 9);
+    return;
+  }
   d.drawString(NOMI[pagina], W / 2, TOP / 2 - 8);
   d.setTextColor(GRIGIO, SCURO);
   d.drawString(String(pagina + 1) + "/" + String(N_PAGINE), W / 2, TOP / 2 + 9);
@@ -857,6 +870,496 @@ void paginaSD(M5Canvas& c) {
   testo(c, 10, 178, "tocca per rileggere", GRIGIO);
 }
 
+// ---------------------------------------------------------------- Laboratorio dei sensi
+// Dalla misura all'evento, un senso alla volta (lezione 3, PROGETTO.md §5.1).
+// Ogni laboratorio legge una misura, la filtra e la passa a un riconoscitore,
+// cioè a una piccola macchina a stati:
+//
+//   QUIETO --misura oltre la soglia--> DENTRO
+//   DENTRO --esce prima della finestra, dopo il minimo--> evento --> PAUSA o QUIETO
+//   DENTRO --finestra 0 e minimo raggiunto--> evento "inizio" --> ATTIVO
+//   ATTIVO --esce (soglia meno isteresi)--> evento "fine" --> PAUSA o QUIETO
+//   PAUSA  --passata la pausa--> QUIETO
+//
+// Comandi dal Monitor seriale (115200 baud, fine riga "Nuova riga"):
+//   ?            aiuto e parametri del laboratorio in corso
+//   lab          elenco dei laboratori
+//   scossa       avvia il laboratorio "scossa" (anche: lab scossa)
+//   soglia 1.2   cambia un parametro; si accetta anche la virgola
+//   valori       rimette i valori di partenza, quelli del §5.1
+//   azzera       azzera i conteggi
+//   testo        scrive qui un evento per riga (all'avvio)
+//   grafico      manda i numeri al Plotter seriale, circa 20 righe al secondo
+//   fine         torna alle pagine
+
+enum TipoLab { GENERICO, COPERTO, CAREZZA };
+enum IdLab { L_SCOSSA, L_CAPOVOLTO, L_INCLINATA, L_VOCE, L_COLPO, L_BUIO, L_COPERTO, L_MANO, L_TOCCO, L_CAREZZA, N_LAB };
+static constexpr int MAX_PARAM = 7;
+struct Param { const char* nome; float val; const char* unita; const char* cosa; float base; };
+struct Lab {
+  const char* nome;      // si scrive nel Monitor per avviarlo
+  const char* misura;    // cosa si misura (va sullo schermo: niente accenti)
+  const char* unita;
+  const char* evento;
+  TipoLab tipo;
+  bool sotto;            // l'evento scatta sotto la soglia (il buio) invece che sopra
+  uint16_t periodo;      // ms tra due campioni; 0 = appena c'è un blocco di microfono
+  uint8_t cifre;         // decimali con cui si mostra la misura
+  Param p[MAX_PARAM];
+};
+
+#define P_ISTERESI(u) { "isteresi", 0, u, "si esce un'isteresi oltre la soglia, dalla parte di prima (0 = spenta)" }
+#define P_MINIMO(v)   { "minimo", v, "ms", "la condizione deve durare almeno tanto" }
+#define P_FINESTRA(v) { "finestra", v, "ms", "l'evento deve finire entro tanto (0 = nessun limite: evento con inizio e fine)" }
+#define P_PAUSA       { "pausa", 0, "ms", "dopo un evento non ascolta per tanto" }
+#define P_FILTRO(v)   { "filtro", v, "Hz", "passa-basso: liscia la misura ma la ritarda (0 = spento)" }
+
+Lab LABS[N_LAB] = {
+  { "scossa", "scarto del modulo da 1 g (IMU)", "g", "scossa", GENERICO, false, 10, 2,
+    { { "soglia", 1.5f, "g", "si entra sopra questo valore; 3 g per la scossa forte" },
+      P_ISTERESI("g"), P_MINIMO(0), P_FINESTRA(300), P_PAUSA, P_FILTRO(0) } },
+  { "capovolto", "asse z verso il basso (IMU), 1 = schermo giu", "g", "capovolto", GENERICO, false, 10, 2,
+    { { "soglia", 0.8f, "g", "si entra sopra questo valore" },
+      P_ISTERESI("g"), P_MINIMO(1000), P_FINESTRA(0), P_PAUSA, P_FILTRO(0) } },
+  { "inclinata", "angolo dalla posizione piatta (IMU)", "gradi", "inclinata", GENERICO, false, 10, 0,
+    { { "soglia", 30, "gradi", "si entra sopra questo angolo" },
+      P_ISTERESI("gradi"), P_MINIMO(0), P_FINESTRA(0), P_PAUSA, P_FILTRO(5) } },
+  { "voce", "livello del microfono, -60..0 dBFS su 0..1", "", "voce vicina", GENERICO, false, 0, 2,
+    { { "soglia", 0.3f, "0-1", "si entra sopra questo livello" },
+      { "tetto", 0.7f, "0-1", "sopra questo livello non e' piu' voce vicina (0 = nessun tetto)" },
+      P_ISTERESI("0-1"), P_MINIMO(1000), P_FINESTRA(0), P_PAUSA, P_FILTRO(0) } },
+  { "colpo", "livello del microfono, -60..0 dBFS su 0..1", "", "colpo sonoro", GENERICO, false, 0, 2,
+    { { "soglia", 0.8f, "0-1", "si entra sopra questo livello" },
+      P_ISTERESI("0-1"), P_MINIMO(0), P_FINESTRA(300), P_PAUSA, P_FILTRO(0) } },
+  { "buio", "luce ambiente (ALS), conteggi grezzi", "", "buio", GENERICO, true, 100, 0,
+    { { "soglia", 5, "conteggi", "si entra sotto questo valore (il 5.1 dice 5 lux: qui sono conteggi)" },
+      P_ISTERESI("conteggi"), P_MINIMO(2000), P_FINESTRA(0), P_PAUSA, P_FILTRO(0) } },
+  { "coperto", "luce ambiente (ALS), conteggi grezzi", "", "coperto", COPERTO, true, 100, 0,
+    { { "da", 50, "conteggi", "la luce parte sopra questo valore" },
+      { "a", 5, "conteggi", "e scende sotto questo" },
+      { "finestra", 500, "ms", "in meno di tanto; se ci mette di piu' e' buio che arriva piano" } } },
+  { "mano", "prossimita (PS), 0..2047", "", "mano vicina", GENERICO, false, 50, 0,
+    { { "soglia", 150, "conteggi", "si entra sopra questo valore" },
+      P_ISTERESI("conteggi"), P_MINIMO(0), P_FINESTRA(0), P_PAUSA, P_FILTRO(0) } },
+  { "tocco", "contatto sullo schermo, 1 = dito giu", "", "tocco", GENERICO, false, 10, 0,
+    { { "soglia", 0.5f, "", "1 = dito sullo schermo, 0 = niente" },
+      P_ISTERESI(""), P_MINIMO(0), P_FINESTRA(200), P_PAUSA, P_FILTRO(0) } },
+  { "carezza", "velocita del dito sullo schermo", "px/s", "carezza", CAREZZA, false, 10, 0,
+    { { "velocita", 150, "px/s", "piu' veloce di cosi' e' un trascinamento, non una carezza" },
+      { "distanza", 40, "px", "strada minima del dito" },
+      P_FILTRO(5) } },
+};
+
+// stato del riconoscitore e dei conteggi
+enum Fase { F_QUIETO, F_DENTRO, F_ATTIVO, F_PAUSA };   // per coperto: alto, caduta, basso; per carezza: libero, contatto, fatta
+int fase = F_QUIETO;
+uint32_t tInizio = 0, tFinePausa = 0, tUltimoEvento = 0, tCampione = 0, tStampa = 0, tSchermo = 0;
+float picco = 0, fVal = 0, ultimaMisura = 0, ultimaFiltrata = 0;
+bool fPronto = false, inCorso = false, modoTesto = true;
+int nEventi = 0, nScartati = 0;
+String ultimo = "";
+uint16_t coloreUltimo = GRIGIO;
+// carezza
+float distanzaDito = 0; int xPrec = 0, yPrec = 0, xPartenza = 0, yPartenza = 0;
+// grafico: valori raccolti tra una riga e l'altra
+float accMisura = 0, accFiltrata = 0; int nAcc = 0; bool accEvento = false;
+// traccia sullo schermo: un pixel per campione
+static constexpr int N_TRACCIA = W;
+float traccia[N_TRACCIA]; uint8_t segni[N_TRACCIA]; int testaTraccia = 0, nTraccia = 0;
+// riga in arrivo dal seriale
+String riga = ""; uint32_t tCarattere = 0;
+
+const char* nomeLabCorrente() { return labCorrente >= 0 ? LABS[labCorrente].nome : ""; }
+
+float par(const char* nome) {
+  if (labCorrente < 0) return 0;
+  for (int k = 0; k < MAX_PARAM && LABS[labCorrente].p[k].nome; k++)
+    if (!strcmp(LABS[labCorrente].p[k].nome, nome)) return LABS[labCorrente].p[k].val;
+  return 0;
+}
+
+const char* nomeFase() {
+  static const char* G[] = { "QUIETO", "DENTRO", "ATTIVO", "PAUSA" };
+  static const char* C[] = { "ALTO", "CADUTA", "BASSO" };
+  static const char* K[] = { "LIBERO", "CONTATTO", "FATTA" };
+  TipoLab tipo = LABS[labCorrente].tipo;
+  return tipo == COPERTO ? C[fase % 3] : (tipo == CAREZZA ? K[fase % 3] : G[fase % 4]);
+}
+
+uint16_t coloreFase() {
+  static const uint16_t COL[] = { GRIGIO, GIALLO, VERDE, VIOLA };
+  return COL[fase % 4];
+}
+
+// ---- le tre righe che scrivono gli esiti
+void evento(const char* tipo, uint32_t durata) {
+  const Lab& L = LABS[labCorrente];
+  bool fine = tipo && !strcmp(tipo, "fine");
+  if (!fine) { nEventi++; tUltimoEvento = millis(); }
+  ultimo = String(L.evento) + (tipo ? String(" ") + tipo : String("")) + "  " + durata + " ms";
+  coloreUltimo = fine ? GRIGIO : VERDE;
+  if (!modoTesto) return;
+  Serial.printf("%8.2f s  %s%s%s", millis() / 1000.0f, L.evento, tipo ? " " : "", tipo ? tipo : "");
+  if (!fine) Serial.printf("  #%d", nEventi);
+  Serial.printf("  durata %u ms", (unsigned)durata);
+  if (L.tipo == GENERICO) Serial.printf("  picco %.*f %s", L.cifre, picco, L.p[0].unita);
+  Serial.println();
+}
+
+void scarto(const char* motivo, uint32_t durata) {
+  const Lab& L = LABS[labCorrente];
+  nScartati++;
+  ultimo = String("scartato: ") + motivo + "  " + durata + " ms";
+  coloreUltimo = ARANCIO;
+  if (!modoTesto) return;
+  Serial.printf("%8.2f s  scartato, %s  durata %u ms", millis() / 1000.0f, motivo, (unsigned)durata);
+  if (L.tipo == GENERICO) Serial.printf("  picco %.*f %s", L.cifre, picco, L.p[0].unita);
+  Serial.println();
+}
+
+void dopoEvento(uint32_t t) {
+  if (par("pausa") > 0) { fase = F_PAUSA; tFinePausa = t + (uint32_t)par("pausa"); }
+  else fase = F_QUIETO;
+}
+
+// ---- filtro passa-basso a un polo: ogni campione si avvicina alla misura di una frazione a
+float filtra(float x, float dtMs) {
+  float fc = par("filtro");
+  if (fc <= 0 || !fPronto) { fVal = x; fPronto = true; return x; }
+  float dt = dtMs / 1000.0f, rc = 1.0f / (2.0f * PI * fc);
+  fVal += dt / (rc + dt) * (x - fVal);
+  return fVal;
+}
+
+// ---- misure
+float livelloMicLab() {   // un blocco di 16 ms, i due microfoni insieme
+  if (!CoreS3.Mic.isEnabled() || !CoreS3.Mic.record(bufMic, N_CAMPIONI * 2, 16000, true)) return -1;
+  while (CoreS3.Mic.isRecording()) delay(1);
+  double somma = 0;
+  for (size_t i = 0; i < N_CAMPIONI * 2; i++) somma += (double)bufMic[i] * bufMic[i];
+  float rms = sqrt(somma / (N_CAMPIONI * 2)) / 32768.0f;
+  float db = 20.0f * log10f(rms < 1e-5f ? 1e-5f : rms);
+  return constrain((db + 60.0f) / 60.0f, 0.0f, 1.0f);   // la stessa scala della pagina Microfono
+}
+
+bool leggiMisura(float& v) {
+  switch (labCorrente) {
+    case L_SCOSSA: case L_CAPOVOLTO: case L_INCLINATA: {
+      float ax, ay, az;
+      if (!CoreS3.Imu.isEnabled() || !CoreS3.Imu.getAccel(&ax, &ay, &az)) return false;
+      float mod = sqrtf(ax * ax + ay * ay + az * az);
+      if (labCorrente == L_SCOSSA)         v = fabsf(mod - 1.0f);   // via la gravità, come la pagina Accelerometro
+      else if (labCorrente == L_CAPOVOLTO) v = -az;
+      else v = degrees(acosf(constrain(az / (mod > 0.01f ? mod : 1.0f), -1.0f, 1.0f)));
+      return true;
+    }
+    case L_VOCE: case L_COLPO: v = livelloMicLab(); return v >= 0;
+    case L_BUIO: case L_COPERTO: if (!luceOk) return false; v = CoreS3.Ltr553.getAlsValue(); return true;
+    case L_MANO: if (!luceOk) return false; v = CoreS3.Ltr553.getPsValue(); return true;
+    case L_TOCCO: v = CoreS3.Touch.getCount() > 0 ? 1 : 0; return true;
+  }
+  return false;
+}
+
+// ---- la traccia per lo schermo e i valori per il Plotter
+void registra(float misura, float filtrata, uint8_t segno) {
+  ultimaMisura = misura; ultimaFiltrata = filtrata;
+  traccia[testaTraccia] = filtrata; segni[testaTraccia] = segno;
+  testaTraccia = (testaTraccia + 1) % N_TRACCIA;
+  if (nTraccia < N_TRACCIA) nTraccia++;
+  // tra due righe del grafico si tiene il valore più estremo, così un picco breve non si perde
+  bool sotto = LABS[labCorrente].sotto;
+  if (nAcc == 0) { accMisura = misura; accFiltrata = filtrata; }
+  else if (sotto) { accMisura = min(accMisura, misura); accFiltrata = min(accFiltrata, filtrata); }
+  else { accMisura = max(accMisura, misura); accFiltrata = max(accFiltrata, filtrata); }
+  nAcc++;
+  if (millis() - tUltimoEvento < 150 || inCorso) accEvento = true;
+}
+
+float altoTraccia() {
+  float hi = 0;
+  for (int i = 0; i < nTraccia; i++) hi = max(hi, traccia[i]);
+  return hi > 0 ? hi : 1;
+}
+
+// ---- i riconoscitori
+void passoGenerico(float misura, uint32_t t, float dt) {
+  const Lab& L = LABS[labCorrente];
+  float f = filtra(misura, dt);
+  float s = par("soglia"), ist = par("isteresi"), tetto = par("tetto");
+  bool dentro = L.sotto ? f < s : (f > s && (tetto <= 0 || f < tetto));
+  bool fuori  = L.sotto ? f > s + ist : (f < s - ist || (tetto > 0 && f > tetto + ist));
+  uint8_t segno = 0;
+
+  if (fase == F_PAUSA && t >= tFinePausa) fase = F_QUIETO;
+  if (fase == F_DENTRO || fase == F_ATTIVO) picco = L.sotto ? min(picco, f) : max(picco, f);
+
+  if (fase == F_QUIETO && dentro) { fase = F_DENTRO; tInizio = t; picco = f; }
+  else if (fase == F_DENTRO) {
+    uint32_t d = t - tInizio;
+    float finestra = par("finestra"), minimo = par("minimo");
+    if (finestra <= 0 && d >= minimo) { evento("inizio", d); fase = F_ATTIVO; inCorso = true; segno = 1; }
+    else if (fuori) {
+      if (finestra > 0 && d >= minimo && d <= finestra) { evento(nullptr, d); dopoEvento(t); segno = 1; }
+      else { scarto(d < minimo ? "troppo breve" : "troppo lungo", d); fase = F_QUIETO; segno = 2; }
+    }
+  } else if (fase == F_ATTIVO && fuori) {
+    evento("fine", t - tInizio); inCorso = false; dopoEvento(t);
+  }
+  registra(misura, f, segno);
+}
+
+// coperto: la luce deve passare da "da" ad "a" entro la finestra
+void passoCoperto(float v, uint32_t t) {
+  float da = par("da"), a = par("a"), finestra = par("finestra");
+  uint8_t segno = 0;
+  if (fase == 0) {                                   // ALTO
+    if (v <= da) { fase = 1; tInizio = t; }
+  } else if (fase == 1) {                            // CADUTA
+    if (v > da) fase = 0;
+    else if (v < a) {
+      uint32_t d = t - tInizio;
+      if (d <= finestra) { evento(nullptr, d); inCorso = true; segno = 1; }
+      else { scarto("troppo lento, e' buio e non coperto", d); segno = 2; }
+      fase = 2; tFinePausa = t;
+    }
+  } else if (v > da) {                               // BASSO, finché non torna la luce
+    if (inCorso) evento("fine", t - tFinePausa);
+    inCorso = false; fase = 0;
+  }
+  registra(v, v, segno);
+}
+
+// carezza: il dito deve fare abbastanza strada senza andare troppo veloce
+void passoCarezza(uint32_t t, float dt) {
+  uint8_t segno = 0; float v = 0, vf = 0;
+  if (CoreS3.Touch.getCount() == 0) { fase = 0; fPronto = false; distanzaDito = 0; }
+  else {
+    auto d = CoreS3.Touch.getDetail();
+    if (fase == 0) {                                 // LIBERO: il dito è appena arrivato
+      fase = 1; tInizio = t; distanzaDito = 0;
+      xPartenza = xPrec = d.x; yPartenza = yPrec = d.y;
+    } else {
+      float passo = hypotf(d.x - xPrec, d.y - yPrec);
+      xPrec = d.x; yPrec = d.y;
+      v = passo / dt * 1000.0f;
+      vf = filtra(v, dt);
+      if (fase == 1) {                               // CONTATTO
+        if (vf > par("velocita")) { scarto("troppo veloce", t - tInizio); fase = 2; segno = 2; }
+        else {
+          distanzaDito += passo;
+          if (distanzaDito >= par("distanza")) {
+            int dx = xPrec - xPartenza, dy = yPrec - yPartenza;
+            const char* verso = abs(dx) > abs(dy) ? (dx > 0 ? "verso destra" : "verso sinistra")
+                                                  : (dy > 0 ? "verso il basso" : "verso l'alto");
+            evento(verso, t - tInizio); fase = 2; segno = 1;
+          }
+        }
+      }                                              // FATTA: si aspetta che il dito si alzi
+    }
+  }
+  registra(v, vf, segno);
+}
+
+void stampaGrafico() {
+  if (modoTesto || nAcc == 0) return;
+  const Lab& L = LABS[labCorrente];
+  float ev = accEvento ? altoTraccia() : 0;
+  if (L.tipo == COPERTO)
+    Serial.printf("misura:%.1f,da:%.1f,a:%.1f,evento:%.1f\n", accMisura, par("da"), par("a"), ev);
+  else if (L.tipo == CAREZZA)
+    Serial.printf("velocita:%.1f,filtrata:%.1f,limite:%.1f,distanza:%.1f,evento:%.1f\n",
+                  accMisura, accFiltrata, par("velocita"), distanzaDito, ev);
+  else {
+    float s = par("soglia"), ist = par("isteresi");
+    Serial.printf("misura:%.3f,filtrata:%.3f,soglia:%.3f,uscita:%.3f,evento:%.3f",
+                  accMisura, accFiltrata, s, L.sotto ? s + ist : s - ist, ev);
+    if (par("tetto") > 0) Serial.printf(",tetto:%.3f", par("tetto"));
+    Serial.println();
+  }
+  nAcc = 0; accEvento = false;
+}
+
+// ---- lo schermo del laboratorio
+void paginaLab(M5Canvas& c) {
+  const Lab& L = LABS[labCorrente];
+  c.setFont(&fonts::DejaVu12);
+  testo(c, 6, 2, L.misura, GRIGIO);
+  c.setFont(&fonts::DejaVu24);
+  String unita = L.unita[0] ? String(" ") + L.unita : String("");
+  testo(c, 6, 18, String(ultimaFiltrata, (unsigned int)L.cifre) + unita, GIALLO);
+  c.setFont(&fonts::DejaVu18);
+  testo(c, 206, 22, nomeFase(), coloreFase());
+
+  // traccia con le linee di soglia
+  const int Y0 = 50, HT = 96;
+  float lo = 0, hi = altoTraccia();
+  for (int i = 0; i < nTraccia; i++) lo = min(lo, traccia[i]);
+  float linee[3] = { NAN, NAN, NAN }; uint16_t colLinee[3] = { CORALLO, ARANCIO, VIOLA };
+  if (L.tipo == COPERTO)      { linee[0] = par("a"); linee[1] = par("da"); }
+  else if (L.tipo == CAREZZA) { linee[0] = par("velocita"); }
+  else {
+    float s = par("soglia"), ist = par("isteresi");
+    linee[0] = s;
+    if (ist > 0) linee[1] = L.sotto ? s + ist : s - ist;
+    if (par("tetto") > 0) linee[2] = par("tetto");
+  }
+  for (int k = 0; k < 3; k++) if (!isnan(linee[k])) hi = max(hi, linee[k]);
+  hi = lo + (hi - lo) * 1.1f;
+  if (hi - lo < 1e-3f) hi = lo + 1;
+  auto y = [&](float v) { return Y0 + HT - (int)((v - lo) / (hi - lo) * HT); };
+
+  c.drawRect(0, Y0 - 1, W, HT + 2, SCURO);
+  for (int k = 0; k < 3; k++) if (!isnan(linee[k])) c.drawFastHLine(0, y(linee[k]), W, colLinee[k]);
+  int primo = (testaTraccia - nTraccia + N_TRACCIA) % N_TRACCIA, yp = 0;
+  for (int i = 0; i < nTraccia; i++) {
+    int k = (primo + i) % N_TRACCIA, yy = y(traccia[k]);
+    if (segni[k]) c.drawFastVLine(i, Y0, HT, segni[k] == 1 ? VERDE : ARANCIO);
+    if (i > 0) c.drawLine(i - 1, yp, i, yy, AZZURRO);
+    yp = yy;
+  }
+
+  c.setFont(&fonts::DejaVu12);
+  testo(c, 6, 154, "eventi " + String(nEventi) + "   scartati " + String(nScartati));
+  testo(c, 210, 154, modoTesto ? "seriale: testo" : "seriale: grafico", GRIGIO);
+  if (ultimo.length()) testo(c, 6, 172, ultimo, coloreUltimo);
+  else testo(c, 6, 172, "scrivi ? nel Monitor seriale", GRIGIO);
+
+  if (millis() - tUltimoEvento < 250) { c.drawRect(0, 0, W, H - TOP, VERDE); c.drawRect(1, 1, W - 2, H - TOP - 2, VERDE); }
+}
+
+// ---- avvio, giro, uscita
+void azzeraLab() {
+  fase = LABS[labCorrente].tipo == COPERTO ? 2 : 0;   // coperto: prima deve vedere la luce
+  fPronto = false; inCorso = false; picco = 0; distanzaDito = 0;
+  nEventi = nScartati = 0; ultimo = ""; tUltimoEvento = 0;
+  nTraccia = testaTraccia = 0; nAcc = 0; accEvento = false;
+}
+
+void avviaLab(int i) {
+  labCorrente = i;
+  azzeraLab();
+  tCampione = 0;
+  if (i == L_VOCE || i == L_COLPO) { CoreS3.Speaker.end(); CoreS3.Mic.begin(); }
+  else CoreS3.Mic.end();
+  CoreS3.Display.fillScreen(NERO);
+  disegnaBarraNavigazione();
+  if (modoTesto) stampaParametri();
+}
+
+void esciLab() {
+  labCorrente = -1;
+  entraPagina(pagina);
+  CoreS3.Display.fillScreen(NERO);
+  disegnaBarraNavigazione();
+  Serial.println("laboratorio chiuso, si torna alle pagine");
+}
+
+// campionare conta più che disegnare: lo schermo si ridisegna solo quando
+// non c'è un evento breve in corso, così il disegno non copre un picco
+bool momentoDelicato() {
+  const Lab& L = LABS[labCorrente];
+  if (L.tipo == COPERTO) return fase == 1;
+  if (L.tipo == CAREZZA) return false;
+  return fase == F_DENTRO && par("finestra") > 0;
+}
+
+void giraLab() {
+  const Lab& L = LABS[labCorrente];
+  uint32_t ora = millis();
+  if (L.periodo == 0 || ora - tCampione >= L.periodo) {
+    float dt = tCampione ? (float)(ora - tCampione) : (L.periodo ? (float)L.periodo : 16.0f);
+    if (dt < 1) dt = 1;
+    tCampione = ora;
+    float v;
+    if (L.tipo == CAREZZA) passoCarezza(ora, dt);
+    else if (leggiMisura(v)) {
+      if (L.tipo == COPERTO) passoCoperto(v, ora); else passoGenerico(v, ora, dt);
+    }
+  }
+  if (ora - tStampa >= 40) { stampaGrafico(); tStampa = ora; }
+  if (!momentoDelicato() && ora - tSchermo >= 250) {   // ridisegnare costa circa 40 ms senza campioni
+    tela.fillScreen(NERO);
+    paginaLab(tela);
+    tela.pushSprite(0, TOP);
+    tSchermo = ora;
+  }
+}
+
+// ---- seriale
+void elencoLab() {
+  Serial.println("laboratori (scrivi il nome per avviarne uno):");
+  for (int i = 0; i < N_LAB; i++) Serial.printf("  %-10s %s\n", LABS[i].nome, LABS[i].misura);
+}
+
+void stampaParametri() {
+  const Lab& L = LABS[labCorrente];
+  Serial.printf("\nlab %s: %s", L.nome, L.misura);
+  if (L.periodo) Serial.printf(", un campione ogni %u ms\n", L.periodo);
+  else Serial.println(", un campione ogni 16 ms");
+  for (int k = 0; k < MAX_PARAM && L.p[k].nome; k++)
+    Serial.printf("  %-9s %8g %-9s %s\n", L.p[k].nome, L.p[k].val, L.p[k].unita, L.p[k].cosa);
+  Serial.printf("eventi %d, scartati %d\n\n", nEventi, nScartati);
+}
+
+void stampaAiuto() {
+  Serial.println();
+  Serial.println("Laboratorio dei sensi: dalla misura all'evento (PROGETTO.md 5.1)");
+  Serial.println("  lab           elenca i laboratori");
+  Serial.println("  scossa        avvia un laboratorio (anche: lab scossa)");
+  Serial.println("  soglia 1.2    cambia un parametro del laboratorio in corso");
+  Serial.println("  valori        rimette i valori di partenza");
+  Serial.println("  azzera        azzera i conteggi");
+  Serial.println("  testo         scrive qui gli eventi, uno per riga");
+  Serial.println("  grafico       manda i numeri al Plotter seriale");
+  Serial.println("  fine          torna alle pagine dell'Esploratore");
+  if (labCorrente >= 0) stampaParametri(); else elencoLab();
+}
+
+void comando(String s) {
+  s.trim(); s.toLowerCase(); s.replace(',', '.');
+  if (!s.length()) return;
+  int sp = s.indexOf(' ');
+  String cmd = sp < 0 ? s : s.substring(0, sp);
+  String arg = sp < 0 ? String("") : s.substring(sp + 1);
+  arg.trim();
+
+  if (cmd == "?" || cmd == "aiuto" || cmd == "help") { stampaAiuto(); return; }
+  if (cmd == "testo")   { modoTesto = true;  Serial.println("modo testo: un evento per riga"); return; }
+  if (cmd == "grafico") { modoTesto = false; return; }   // da qui in poi solo numeri, per il Plotter
+  if (cmd == "fine" || cmd == "esci" || (cmd == "lab" && arg == "fine")) { if (labCorrente >= 0) esciLab(); return; }
+  if (cmd == "lab" && !arg.length()) { elencoLab(); return; }
+  String nome = cmd == "lab" ? arg : cmd;
+  for (int i = 0; i < N_LAB; i++) if (nome == LABS[i].nome) { avviaLab(i); return; }
+
+  if (labCorrente < 0) { Serial.println("nessun laboratorio in corso: scrivi lab per l'elenco"); return; }
+  Lab& L = LABS[labCorrente];
+  if (cmd == "azzera") { azzeraLab(); if (modoTesto) Serial.println("conteggi azzerati"); return; }
+  if (cmd == "valori") {
+    for (int k = 0; k < MAX_PARAM && L.p[k].nome; k++) L.p[k].val = L.p[k].base;
+    azzeraLab();
+    if (modoTesto) stampaParametri();
+    return;
+  }
+  for (int k = 0; k < MAX_PARAM && L.p[k].nome; k++) {
+    if (cmd != L.p[k].nome) continue;
+    if (arg.length()) { L.p[k].val = arg.toFloat(); if (!strcmp(L.p[k].nome, "filtro")) fPronto = false; }
+    if (modoTesto) Serial.printf("%s = %g %s\n", L.p[k].nome, L.p[k].val, L.p[k].unita);
+    return;
+  }
+  Serial.println("non capisco \"" + s + "\": scrivi ? per l'aiuto");
+}
+
+// una riga finisce con Invio; se il Monitor è su "Nessun fine riga" basta una pausa di 300 ms
+void leggiSeriale() {
+  while (Serial.available()) {
+    char ch = Serial.read();
+    if (ch == '\n' || ch == '\r') { if (riga.length()) comando(riga); riga = ""; }
+    else if (riga.length() < 60) { riga += ch; tCarattere = millis(); }
+  }
+  if (riga.length() && millis() - tCarattere > 300) { comando(riga); riga = ""; }
+}
+
 // ---------------------------------------------------------------- setup e loop
 void setup() {
   auto cfg = M5.config();
@@ -882,6 +1385,7 @@ void setup() {
   p.ps_led_pulse_freq   = LTR5XX_LED_PULSE_FREQ_40KHZ;
   p.ps_measurement_rate = LTR5XX_PS_MEASUREMENT_RATE_50MS;
   p.als_gain            = LTR5XX_ALS_GAIN_48X;
+  p.als_measurement_rate = LTR5XX_ALS_MEASUREMENT_RATE_100MS;   // di serie 500 ms: troppo lento per "coperto"
   CoreS3.Ltr553.begin(&p);
   CoreS3.Ltr553.setPsMode(LTR5XX_PS_ACTIVE_MODE);
   CoreS3.Ltr553.setAlsMode(LTR5XX_ALS_ACTIVE_MODE);
@@ -891,17 +1395,29 @@ void setup() {
   WiFi.mode(WIFI_STA);
   WiFi.disconnect();
 
+  for (int i = 0; i < N_LAB; i++)
+    for (int k = 0; k < MAX_PARAM; k++) LABS[i].p[k].base = LABS[i].p[k].val;
+
   Serial.printf("scheda %s, imu %s, pmic %s, camera %d, luce %d\n",
                 nomeBoard(), nomeImu(), nomePmic(), cameraOk, luceOk);
+  Serial.println("Laboratorio dei sensi: scrivi ? e premi Invio");
   entraPagina(pagina);
   disegnaBarraNavigazione();
 }
 
 void loop() {
   CoreS3.update();
+  leggiSeriale();
+
+  auto t = CoreS3.Touch.getDetail();
+  if (labCorrente >= 0) {                         // nel laboratorio lo schermo è il sensore:
+    if (t.wasClicked() && t.y < TOP) esciLab();   // si esce solo dalla barra in alto
+    else giraLab();
+    delay(1);
+    return;
+  }
 
   // navigazione: flick orizzontale o tocco sugli angoli della barra
-  auto t = CoreS3.Touch.getDetail();
   if (t.wasFlicked()) {
     int dx = t.distanceX();
     if (dx < -40) cambiaPagina(+1);
