@@ -88,55 +88,55 @@ Ogni lezione ha la stessa forma: la parte frontale introduce cosa serve al lavor
 
 - **Frontale.** I cinque canali (schermo, colore, suono, vibrazione, luminosità). La grammatica dei bisogni: nutrimento contrae, energia accelera, umore satura, socialità apre. Le tre intensità e la convenzione del sonno. Grafica generativa con le primitive di M5GFX.
 - **Gruppo.** Decidere cosa significano i nove gesti per la propria specie. Disegnare la forma di base e le sue deformazioni, poi programmarla sul dispositivo.
-- **Consegna.** Tabella gesto → significato → effetto sui bisogni. Forma di base animata, con le quattro direzioni espressive comandate a mano.
+- **Consegna.** Tabella gesto → significato → effetto sui bisogni. Forma di base animata, con le quattro direzioni espressive comandate a mano. Piano dettagliato: `lezione-04-espressione-senza-volto.md`.
 
 ### 5. Design system e suono
 
 - **Frontale.** Le dieci regole del design system. La tavolozza comune su uno schermo IPS da 2 pollici. Il suono: scala pentatonica, quattro famiglie d'onda, inviluppi, i limiti dell'altoparlante da 1 W.
 - **Gruppo.** Scegliere palette e timbro, provarli in stanza accanto alle altre specie.
-- **Consegna.** Identità della specie in `config.h`: codice, palette, timbro.
+- **Consegna.** Identità della specie in `config.h`: codice, palette, timbro. Piano dettagliato: `lezione-05-design-system-e-suono.md`.
 
 ### 6. La piattaforma
 
 - **Frontale.** Architettura a livelli, ciclo di esecuzione senza attese, struttura dei file. Cosa la specie può fare e cosa no. Gli strumenti di lavoro: seriale, comandi `set` e `get`, fattore tempo, schermo di debug.
 - **Gruppo.** Partire dalla specie neutra e trasformarla nella propria: bisogni, stati, reazioni ai gesti, espressione.
-- **Consegna.** Specie v0 che vive su due dispositivi.
+- **Consegna.** Specie v0 che vive su due dispositivi. Piano dettagliato: `lezione-06-la-piattaforma.md`.
 
 ### 7. Corpo fisico e osservazione
 
 - **Frontale.** L'involucro: vincoli della regola 10 (impronta 54 × 54 mm, finestre libere, rigidità, antenna). Metodi di osservazione: playtest, registrazione da seriale, la vita della creatura come grafico.
 - **Gruppo.** Revisione intermedia: ogni gruppo fa provare la propria specie a un altro, senza spiegazioni. Primi modelli di involucro.
-- **Consegna.** Revisione intermedia: specie v0, un'ora di vita registrata da seriale, schizzi dell'involucro.
+- **Consegna.** Revisione intermedia: specie v0, un'ora di vita registrata da seriale, schizzi dell'involucro. Piano dettagliato: `lezione-07-corpo-fisico-e-osservazione.md`.
 
 ### 8. La rete
 
 - **Frontale.** ESP-NOW e la metafora del verso. Annuncio, tabella dei vicini, RSSI e vicinanza. I messaggi comuni (1–7) e i codici liberi (100–199). Prova dal vivo con la pagina ESP-NOW dell'Esploratore.
 - **Gruppo.** Dare alla specie una vita sociale: come reagisce ai vicini, cosa manda, cosa ignora.
-- **Consegna.** Specie sociale tra i due individui del gruppo, codici propri documentati.
+- **Consegna.** Specie sociale tra i due individui del gruppo, codici propri documentati. Piano dettagliato: `lezione-08-la-rete.md`.
 
 ### 9. Convivenza
 
 - **Frontale.** Le regole di convivenza, il limite di 5 messaggi al secondo, il divieto di risposta automatica. Perché dieci creature possono intasare una stanza in pochi secondi. L'osservatore come strumento di verifica.
 - **Gruppo.** Prima prova con la flotta intera nella stessa stanza, con l'osservatore acceso. Correzioni.
-- **Consegna.** Specie che convive con tutte le altre per 30 minuti senza errori.
+- **Consegna.** Specie che convive con tutte le altre per 30 minuti senza errori. Piano dettagliato: `lezione-09-convivenza.md`.
 
 ### 10. Unisono: l'orologio e la sessione
 
 - **Frontale.** Lo stato di grazia e i bisogni congelati. L'orologio condiviso: SYNC, passi, deriva. La sessione: innesco, ingresso, continuità, fine. Lo strumento: beccheggio, rollio, tap quantizzato.
 - **Gruppo.** Definire la parte di unisono: ruolo, pattern di 16 passi, ottava, innesco, uscita.
-- **Consegna.** Parte di unisono in `config.h`, provata con almeno un'altra specie.
+- **Consegna.** Parte di unisono in `config.h`, provata con almeno un'altra specie. Piano dettagliato: `lezione-10-unisono-orologio-e-sessione.md`.
 
 ### 11. Unisono: autonoma e suonata
 
 - **Frontale.** La voce autonoma e i quattro ruoli (bordone, ritmo, melodia, eco). Docilità, ascolto, prontezza, quorum. Il visivo del battito. Come si presenta una flotta a un pubblico.
 - **Gruppo.** Prova generale con la flotta intera: unisono autonomo, poi suonato da persone esterne. Involucro definitivo.
-- **Consegna.** Specie completa e involucro montato.
+- **Consegna.** Specie completa e involucro montato. Piano dettagliato: `lezione-11-unisono-autonoma-e-suonata.md`.
 
 ### 12. La stanza
 
 - **Frontale.** Allestimento della stanza e ultima prova di flotta.
 - **Gruppo.** Presentazione pubblica: la flotta vive, le persone la curano e la suonano. Critica collettiva e retrospettiva.
-- **Consegna.** Consegna finale (vedi sotto).
+- **Consegna.** Consegna finale (vedi sotto). Piano dettagliato: `lezione-12-la-stanza.md`.
 
 ## Consegne e valutazione
 

@@ -33,6 +33,15 @@ code/      il codice Arduino per M5Stack CoreS3
 | [programma-corso-interaction-design-26-27.md](docs/programma-corso-interaction-design-26-27.md) · [pdf](docs/programma-corso-interaction-design-26-27.pdf) | Il programma del corso, lezione per lezione. |
 | [lezione-02-la-creatura-nel-tempo.md](docs/lezione-02-la-creatura-nel-tempo.md) | Piano della lezione 2: macchine a stati finiti, bisogni nel tempo, simulazione su carta e giornata tipo della specie. |
 | [lezione-03-sensi-e-gesti.md](docs/lezione-03-sensi-e-gesti.md) | Piano della lezione 3 (bozza): dalla misura all'evento, i nove gesti e il contesto, consegna dei dispositivi e misure della stanza con l'Esploratore. |
+| [lezione-04-espressione-senza-volto.md](docs/lezione-04-espressione-senza-volto.md) | Piano della lezione 4 (bozza): i cinque canali, la grammatica dei bisogni e il sonno; significato dei gesti e forma di base animata sul dispositivo. |
+| [lezione-05-design-system-e-suono.md](docs/lezione-05-design-system-e-suono.md) | Piano della lezione 5 (bozza): le dieci regole del design system, tavolozza e primari, scala e timbri; identità della specie provata accanto alle altre. |
+| [lezione-06-la-piattaforma.md](docs/lezione-06-la-piattaforma.md) | Piano della lezione 6 (bozza): architettura, file della specie e strumenti di lavoro; dalla specie neutra alla specie v0 su due dispositivi. |
+| [lezione-07-corpo-fisico-e-osservazione.md](docs/lezione-07-corpo-fisico-e-osservazione.md) | Piano della lezione 7 (bozza): l'involucro e la regola 10, i metodi di osservazione; revisione intermedia con playtest incrociato e un'ora di vita registrata. |
+| [lezione-08-la-rete.md](docs/lezione-08-la-rete.md) | Piano della lezione 8 (bozza): ESP-NOW, annuncio e vicini, messaggi comuni e codici liberi; la vita sociale della specie. |
+| [lezione-09-convivenza.md](docs/lezione-09-convivenza.md) | Piano della lezione 9 (bozza): regole di convivenza e limiti della radio; prima prova di flotta con l'osservatore e controlli verificabili. |
+| [lezione-10-unisono-orologio-e-sessione.md](docs/lezione-10-unisono-orologio-e-sessione.md) | Piano della lezione 10 (bozza): lo stato di grazia, l'orologio condiviso e la sessione; la parte di unisono della specie. |
+| [lezione-11-unisono-autonoma-e-suonata.md](docs/lezione-11-unisono-autonoma-e-suonata.md) | Piano della lezione 11 (bozza): voce autonoma, ruoli e tratti, visivo del battito; prova generale autonoma e suonata, involucro definitivo. |
+| [lezione-12-la-stanza.md](docs/lezione-12-la-stanza.md) | Piano della lezione 12 (bozza): allestimento della stanza, presentazione finale, critica collettiva e retrospettiva. |
 | [segni-macchina-a-stati.html](docs/segni-macchina-a-stati.html) | I segni per disegnare una macchina a stati secondo UML, il confronto con le altre notazioni e il modello della creatura ridisegnato, con lo stato proprio e l'unisono. |
 | [simulatore-vita-creatura.html](docs/simulatore-vita-creatura.html) | Il simulatore della vita di una creatura in turni da 10 minuti, con i tre mazzi di cura, i parametri della specie e lo stato proprio modificabili. |
 | [unisono-stati.html](docs/unisono-stati.html) | L'unisono come macchina a stati gerarchica: ingresso, sessione, uscita, eccezioni e recupero. |
@@ -45,7 +54,7 @@ Le prove sul dispositivo, una cartella per sketch.
 
 | Sketch | Cosa fa |
 | --- | --- |
-| [EsploratoreCoreS3](code/arduino/EsploratoreCoreS3) | Una pagina per ogni sensore e uscita del CoreS3: IMU, bussola, luce, camera, microfono, touch, altoparlante, alimentazione, Wi-Fi, BLE, ESP-NOW, I2C, SD. |
+| [EsploratoreCoreS3](code/arduino/EsploratoreCoreS3) | Una pagina per ogni sensore e uscita del CoreS3: IMU, bussola, luce, camera, microfono, touch, altoparlante, alimentazione, Wi-Fi, BLE, ESP-NOW, I2C, SD. Con il **laboratorio dei sensi** (lezione 3), comandato dal Monitor seriale: soglia, isteresi, tempo minimo, finestra, pausa e filtro su dieci eventi del §5.1, con i numeri per il Plotter seriale. Scrivi `?` nel Monitor a 115200 baud. |
 | [ProvaSonora](code/arduino/ProvaSonora) | Cosa sa fare l'altoparlante: timbri, registri, inviluppi, accordi, sweep. Con "Tutti" più dispositivi suonano insieme via ESP-NOW. |
 | [TestSincronia](code/arduino/TestSincronia) | Prova dell'orologio condiviso dell'unisono su tre o più dispositivi (PROGETTO.md §8.2–8.3). `banco.py` li pilota via seriale e misura lo scarto. |
 | [ProvaBlob](code/arduino/ProvaBlob) | Un blob morbido che rotola con l'inclinazione e si deforma con il suono. |
