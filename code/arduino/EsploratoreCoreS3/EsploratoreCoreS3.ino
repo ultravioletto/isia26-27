@@ -304,9 +304,12 @@ void paginaLuce(M5Canvas& c) {
   static uint16_t alsPrec = als;
   const char* stato = "";
   uint16_t col = GRIGIO;
-  if (ps > 150)                       { stato = "mano vicina"; col = ACQUA; }
-  else if (als < 5)                   { stato = "buio";        col = VIOLA; }
-  else if (alsPrec > 20 && als < 5)   { stato = "coperto";     col = CORALLO; }
+  // "coperto" prima di "buio": la stessa luce bassa, ma arrivata di colpo
+  static uint32_t tCoperto = 0;
+  if (alsPrec > 20 && als < 5) tCoperto = millis();
+  if (ps > 150)                            { stato = "mano vicina"; col = ACQUA; }
+  else if (als < 5 && millis() - tCoperto < 1500) { stato = "coperto"; col = CORALLO; }
+  else if (als < 5)                        { stato = "buio";        col = VIOLA; }
   c.setFont(&fonts::DejaVu18);
   testo(c, 16, 160, stato, col);
   alsPrec = als;

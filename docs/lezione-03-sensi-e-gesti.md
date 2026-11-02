@@ -18,7 +18,7 @@ Ogni gruppo esce con due dispositivi funzionanti e registrati, e con la **tabell
 ## Materiali da preparare
 
 - Dispositivi: 2 CoreS3 per gruppo più 2 di riserva, carichi, con un'etichetta numerata sul retro. Cavi USB-C, uno per dispositivo.
-- Esploratore CoreS3 compilato e provato su un dispositivo del docente prima della lezione.
+- Esploratore CoreS3 compilato e provato su un dispositivo del docente prima della lezione, con il **laboratorio dei sensi** comandato dal Monitor seriale. Scheda d'uso ed esperimenti senso per senso: [`lezione-03-laboratorio-dei-sensi.md`](lezione-03-laboratorio-dei-sensi.md).
 - Figura 5 del documento di progetto (la catena dei sensi) e la tabella del §5.1, stampate in A3, una per gruppo.
 - **Scheda delle misure** stampata, una per gruppo (modello in fondo a questo piano).
 - Per le postazioni di misura: una lampada da tavolo, un panno scuro, un righello, un cronometro (va bene il telefono).
@@ -71,7 +71,7 @@ Ogni gruppo esce con due dispositivi funzionanti e registrati, e con la **tabell
 | Finestra massima | l'evento deve essere breve | scossa sotto 300 ms, tap sotto 200 ms |
 | Pausa dopo l'evento | un gesto non conta due volte | tre scosse di fila sono tre scosse o una sola? |
 
-Alla lavagna: lo stesso segnale rumoroso letto con una soglia sola, con isteresi, con isteresi e tempo minimo. Si contano gli eventi falsi nei tre casi.
+Alla lavagna, o meglio dal vivo con il laboratorio `scossa` al Plotter seriale proiettato: lo stesso segnale letto con i valori del §5.1, poi con la pausa, poi con il tempo minimo. Si contano gli eventi falsi a ogni passo. Per l'isteresi, il laboratorio `mano`: la mano ferma sulla soglia fa alternare inizio e fine finché non si mette l'isteresi.
 
 **Esercizio lampo (10').** A coppie, senza guardare il documento: definire **coprire** oppure **carezza** con un sensore, una soglia e un tempo. Due coppie leggono la loro definizione, poi si confronta con il §5.1. Di solito "coprire" viene confuso con "fare buio": il documento li distingue con la velocità della caduta di luce, cioè con un tempo.
 
@@ -136,10 +136,11 @@ Quello che abbiamo già scoperto provando i dispositivi, da dire prima che i gru
 2. Percorrere le 15 pagine una volta, senza misurare: cosa c'è, cosa si muove, cosa non funziona.
 3. Dalla pagina **Info**, copiare nel registro il **MAC** di ogni dispositivo e scegliere un nome breve. Servono per la tabella di flotta (§3.5): il MAC dà l'identità e il seme individuale di ogni creatura.
 4. Controllare la batteria dalla pagina Alimentazione.
+5. Aprire il Monitor seriale a 115200 baud, scrivere `?` e poi `scossa`: se arriva la risposta, il laboratorio dei sensi funziona.
 
 ### B · Le quattro postazioni di misura (75')
 
-I gruppi ruotano su quattro postazioni, circa 18 minuti ciascuna. In ogni postazione: una persona fa il gesto, una legge la pagina, una scrive. Ogni situazione si ripete **5 volte**, possibilmente da persone diverse, e si annotano il minimo, il valore tipico e il massimo.
+I gruppi ruotano su quattro postazioni, circa 18 minuti ciascuna. Le pagine dell'Esploratore danno i valori; il laboratorio dei sensi dà le durate e gli esiti, e ogni postazione ha i suoi esperimenti nella [scheda del laboratorio](lezione-03-laboratorio-dei-sensi.md) (postazione 1: esperimenti 1–3; 2: 4–5; 3: 6–8; 4: 9–10). In ogni postazione: una persona fa il gesto, una legge la pagina, una scrive. Ogni situazione si ripete **5 volte**, possibilmente da persone diverse, e si annotano il minimo, il valore tipico e il massimo.
 
 **1. Scossa e inclinazione** (pagina Accelerometro: picco scossa in g, beccheggio e rollio in gradi)
 - scossa leggera, scossa decisa, scossa forte;
@@ -157,7 +158,7 @@ I gruppi ruotano su quattro postazioni, circa 18 minuti ciascuna. In ogni postaz
 - sotto la lampada; coperto dalla mano; coperto dal panno; in tasca;
 - prossimità: la mano a 1, 3 e 10 cm.
 
-**4. Touch** (pagina Touch: posizione dei contatti e ultimo gesto riconosciuto, cioè tap, pressione lunga o trascinamento; la pagina non mostra durate né velocità, che si stimano con il cronometro e il righello)
+**4. Touch** (pagina Touch: posizione dei contatti e ultimo gesto riconosciuto; durate e velocità dai laboratori `tocco` e `carezza`)
 - tap, doppio tap, pressione lunga, cronometrandoli;
 - carezza lenta e trascinamento veloce: lunghezza e durata;
 - toccare lo schermo con il dispositivo in mano, senza volerlo.
@@ -169,6 +170,7 @@ Per ogni senso il gruppo disegna una **retta dei valori**: sotto, le situazioni 
 - La soglia cade nello spazio vuoto tra i due gruppi di valori? Allora funziona.
 - Cade in mezzo a un gruppo? Ci saranno eventi falsi (scatta senza motivo) o mancati (non scatta quando dovrebbe). Quale dei due è peggio per una creatura?
 - Serve un'isteresi? Un tempo minimo? Una finestra più stretta?
+- Prima di scriverla, la soglia si prova nel laboratorio dei sensi: cinque gesti che devono scattare, cinque che non devono. Si contano giusti, falsi e mancati.
 
 Il caso da guardare con attenzione: **camminare con la creatura in tasca supera 1,5 g?** Se sì, ogni passeggiata è una serie di scosse, e la creatura neutra si spaventa a ogni passo.
 
