@@ -69,6 +69,20 @@ Le prove sul dispositivo, una cartella per sketch.
 
 **Raccolta:** i file `app_*.h` sono generati a partire dagli sketch originali e non vanno modificati a mano. Dopo aver cambiato uno sketch, lancia `python aggiorna.py` nella cartella `Raccolta` (serve `arduino-cli`, già incluso nell'Arduino IDE 2) e ricompila.
 
+## Lavorare con un assistente AI
+
+Il progetto funziona con qualsiasi assistente. Il contesto comune (cosa sono le creature, dove sta la specifica, le regole del design system, cosa sappiamo già del CoreS3) è in [AGENTS.md](AGENTS.md). `GEMINI.md` e `CLAUDE.md` rimandano a quel file.
+
+| Strumento | Costo | Come |
+| --- | --- | --- |
+| **GitHub Copilot** in VS Code | gratis per gli studenti con il [GitHub Student Developer Pack](https://education.github.com/pack) | apri la cartella del progetto in VS Code; Copilot legge `AGENTS.md` da solo e permette di scegliere il modello (GPT, Gemini, Claude) |
+| **Gemini CLI** | gratis con un account Google, con un limite giornaliero | installa Node.js, poi `npm install -g @google/gemini-cli`; dalla cartella del progetto lancia `gemini` |
+| **Codex** di OpenAI | incluso negli abbonamenti ChatGPT | `codex` dal terminale o l'estensione per VS Code; legge `AGENTS.md` da solo |
+| **Claude Code** | abbonamento Claude | `claude` dalla cartella del progetto |
+| **Chat web** (Gemini, ChatGPT, Claude) | piani gratuiti | carica `AGENTS.md`, `project/PROGETTO.md` e lo sketch su cui lavori; il codice va poi copiato nell'Arduino IDE |
+
+Nessun assistente può provare il codice sul dispositivo: si carica sempre dall'Arduino IDE e si guarda cosa succede.
+
 ## Hardware
 
 M5Stack **CoreS3** (anche Core2, con i sensi in comune: IMU, microfono, touch). Le specie progettano su questi sensi; luce, prossimità e vibrazione sono un di più. I dettagli sono in [PROGETTO.md §3](project/PROGETTO.md).
